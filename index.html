@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SwitchKit — Get Your Data Out of FieldRoutes</title>
+  <meta name="description" content="Stop letting FieldRoutes hold your customer data hostage. $199 flat. Clean migration to GorillaDesk or Jobber in 48 hours." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0A0F1C;
+      --surface: #111827;
+      --surface2: #162030;
+      --accent: #F5C842;
+      --accent-dim: rgba(245,200,66,0.12);
+      --text: #F0EDE4;
+      --muted: #8899AA;
+      --border: #1E2D40;
+      --success: #2ECC71;
+      --danger: #E74C3C;
+      --font-head: 'Syne', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --font-body: 'Source Serif 4', serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(10,15,28,0.95);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+    .logo {
+      font-family: var(--font-mono);
+      font-weight: 500;
+      font-size: 1rem;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+    .logo span { color: var(--muted); }
+    nav a {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--text); }
+
+    /* HERO */
+    .hero {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+    }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .eyebrow::before, .eyebrow::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+    h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero-sub {
+      font-size: 1.2rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+      font-family: var(--font-body);
+    }
+    .hero-cta {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent);
+      color: #0A0F1C;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      padding: 1rem 2.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+    .price-note {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* PROOF STRIP */
+    .proof-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      padding: 1.25rem 2rem;
+      text-align: center;
+    }
+    .proof-strip p {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .proof-strip strong { color: var(--text); }
+
+    /* QUOTE SECTION */
+    .quote-section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+    .section-head {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+    }
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    @media (max-width: 640px) { .quotes-grid { grid-template-columns: 1fr; } }
+    .quote-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 1.25rem 1.5rem;
+    }
+    .quote-text {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.65;
+      margin-bottom: 0.75rem;
+      font-style: italic;
+    }
+    .quote-source {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    /* HOW IT WORKS */
+    .how-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem;
+    }
+    .how-inner { max-width: 860px; margin: 0 auto; }
+    .how-section h2 {
+      font-family: var(--font-head);
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 3rem;
+      letter-spacing: -0.02em;
+    }
+    .steps-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 640px) { .steps-list { grid-template-columns: 1fr; } }
+    .step-item { display: flex; gap: 1rem; align-items: flex-start; }
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(245,200,66,0.25);
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .step-content h3 {
+      font-family: var(--font-head);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+    .step-content p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+      font-family: var(--font-body);
+    }
+
+    /* WHAT YOU GET */
+    .delivers-section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+    .delivers-section h2 {
+      font-family: var(--font-head);
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .delivers-section .sub {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      font-family: var(--font-body);
+    }
+    .file-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 640px) { .file-list { grid-template-columns: 1fr; } }
+    .file-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .file-icon {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--success);
+      background: rgba(46,204,113,0.1);
+      border: 1px solid rgba(46,204,113,0.2);
+      padding: 3px 7px;
+      border-radius: 3px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .file-name {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .file-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-family: var(--font-body);
+    }
+    .guarantee-box {
+      background: var(--accent-dim);
+      border: 1px solid rgba(245,200,66,0.25);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .guarantee-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .guarantee-box h4 {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+    .guarantee-box p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-family: var(--font-body);
+    }
+
+    /* PRICING */
+    .pricing-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem;
+    }
+    .pricing-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .pricing-inner h2 {
+      font-family: var(--font-head);
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 2.5rem;
+      letter-spacing: -0.02em;
+    }
+    .plans-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    @media (max-width: 640px) { .plans-grid { grid-template-columns: 1fr; } }
+    .plan-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.75rem;
+    }
+    .plan-card.featured {
+      border-color: var(--accent);
+      position: relative;
+    }
+    .plan-badge {
+      position: absolute;
+      top: -12px;
+      left: 1.5rem;
+      background: var(--accent);
+      color: #0A0F1C;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 3px 10px;
+      border-radius: 3px;
+    }
+    .plan-name {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .plan-price {
+      font-family: var(--font-mono);
+      font-size: 2.5rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .plan-period {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .plan-features {
+      list-style: none;
+      margin-bottom: 1.75rem;
+    }
+    .plan-features li {
+      font-size: 0.9rem;
+      color: var(--text);
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-body);
+      display: flex;
+      gap: 0.5rem;
+      align-items: baseline;
+    }
+    .plan-features li:last-child { border-bottom: none; }
+    .plan-features li::before {
+      content: '→';
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+    .btn-plan {
+      display: block;
+      text-align: center;
+      padding: 0.85rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-plan-primary {
+      background: var(--accent);
+      color: #0A0F1C;
+    }
+    .btn-plan-primary:hover { opacity: 0.9; }
+    .btn-plan-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-plan-secondary:hover { border-color: var(--muted); }
+
+    /* FAQ */
+    .faq-section {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+    .faq-section h2 {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 0;
+    }
+    .faq-q {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .faq-a {
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-family: var(--font-body);
+      line-height: 1.65;
+    }
+    .faq-a a { color: var(--accent); text-decoration: none; }
+    .faq-a a:hover { text-decoration: underline; }
+
+    /* FINAL CTA */
+    .final-cta {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+    .final-cta h2 {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      max-width: 640px;
+      margin: 0 auto 1rem;
+      line-height: 1.1;
+    }
+    .final-cta h2 em { font-style: normal; color: var(--accent); }
+    .final-cta p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    footer p {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero > * {
+      animation: fadeUp 0.6s ease forwards;
+      opacity: 0;
+    }
+    .hero > *:nth-child(1) { animation-delay: 0.1s; }
+    .hero > *:nth-child(2) { animation-delay: 0.2s; }
+    .hero > *:nth-child(3) { animation-delay: 0.3s; }
+    .hero > *:nth-child(4) { animation-delay: 0.4s; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Switch<span>Kit</span></div>
+  <a href="#pricing">Get started →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">For pest control operators</div>
+  <h1>Your data is yours.<br>Take it <em>back.</em></h1>
+  <p class="hero-sub">
+    FieldRoutes is charging $500 for an incomplete export and making it nearly impossible to leave.
+    SwitchKit gets you out — customer list, service history, recurring schedules —
+    clean and ready to import in 48 hours.
+  </p>
+  <div class="hero-cta">
+    <a href="#pricing" class="btn-primary">Get your data migrated — $199</a>
+    <span class="price-note">flat fee · no subscription · 48-hour turnaround</span>
+  </div>
+</section>
+
+<!-- PROOF STRIP -->
+<div class="proof-strip">
+  <p>
+    Works with <strong>GorillaDesk</strong> · <strong>Jobber</strong> · <strong>Housecall Pro</strong>
+    &nbsp;·&nbsp; Migrates from <strong>FieldRoutes</strong> · <strong>PestRoutes</strong> · <strong>PestPac</strong>
+  </p>
+</div>
+
+<!-- QUOTES -->
+<section class="quote-section">
+  <p class="section-head">// what operators are saying about FieldRoutes</p>
+  <div class="quotes-grid">
+    <div class="quote-card">
+      <p class="quote-text">"PestRoutes has made it impossible to leave by holding our data hostage. We've been trying for almost a year to switch."</p>
+      <p class="quote-source">— Capterra review, Environmental Services</p>
+    </div>
+    <div class="quote-card">
+      <p class="quote-text">"I still can't believe they want $500 to give us an INCOMPLETE data backup. It's only 6 fields of data."</p>
+      <p class="quote-source">— Capterra review, Pest Control Operator</p>
+    </div>
+    <div class="quote-card">
+      <p class="quote-text">"We've been trying for a year to switch software. FieldRoutes made it impossible. I had to forfeit the rest of my subscription."</p>
+      <p class="quote-source">— SoftwareAdvice review, Lawn &amp; Pest</p>
+    </div>
+    <div class="quote-card">
+      <p class="quote-text">"No support when needed. Not two or three days later. No one ever answers the phone."</p>
+      <p class="quote-source">— Capterra review, November 2024</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+    <p class="section-head">// how it works</p>
+    <h2>Four steps. 48 hours.<br>You're out.</h2>
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h3>Pay &amp; fill out the intake form</h3>
+          <p>$199 via Stripe. Then answer 5 quick questions about your current setup, your destination platform, and what data matters most.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h3>Send us your data export</h3>
+          <p>We'll email you exact instructions for pulling your FieldRoutes data — including the reports most operators don't know about. You upload the files to a secure link.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h3>We clean and map everything</h3>
+          <p>Our tool parses your data, deduplicates records, normalizes phone numbers and addresses, and maps every field to your destination platform's format.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <h3>You get a clean migration package</h3>
+          <p>Three ready-to-import CSV files plus a plain-English import guide. Follow the steps and your new software has everything from day one.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<section class="delivers-section">
+  <p class="section-head">// what's in the migration package</p>
+  <h2>Everything, actually.</h2>
+  <p class="sub">Not the 6 fields FieldRoutes gives you. The full picture.</p>
+  <div class="file-list">
+    <div class="file-item">
+      <span class="file-icon">CSV</span>
+      <div>
+        <div class="file-name">customers.csv</div>
+        <div class="file-desc">Full customer list — names, addresses, phones, emails, account numbers, billing vs service address</div>
+      </div>
+    </div>
+    <div class="file-item">
+      <span class="file-icon">CSV</span>
+      <div>
+        <div class="file-name">subscriptions.csv</div>
+        <div class="file-desc">Active recurring plans — service type, frequency, price, next due date, autopay status</div>
+      </div>
+    </div>
+    <div class="file-item">
+      <span class="file-icon">CSV</span>
+      <div>
+        <div class="file-name">service_history.csv</div>
+        <div class="file-desc">Last 24 months of completed jobs — dates, technician, chemicals used, notes, results</div>
+      </div>
+    </div>
+    <div class="file-item">
+      <span class="file-icon">CSV</span>
+      <div>
+        <div class="file-name">open_invoices.csv</div>
+        <div class="file-desc">Outstanding balances by customer — amount, age, linked service records</div>
+      </div>
+    </div>
+    <div class="file-item">
+      <span class="file-icon">PDF</span>
+      <div>
+        <div class="file-name">import_guide.pdf</div>
+        <div class="file-desc">Step-by-step instructions for importing each file into your destination platform. Plain English, no jargon.</div>
+      </div>
+    </div>
+    <div class="file-item">
+      <span class="file-icon">TXT</span>
+      <div>
+        <div class="file-name">migration_report.txt</div>
+        <div class="file-desc">Record counts, any flagged issues (missing emails, duplicate addresses), and what to watch for during import</div>
+      </div>
+    </div>
+  </div>
+  <div class="guarantee-box">
+    <div class="guarantee-icon">⚡</div>
+    <div>
+      <h4>48-hour turnaround, guaranteed</h4>
+      <p>You'll have your migration package within 48 hours of sending us your data files. If we miss that window for any reason, you get a full refund — no questions asked.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-inner">
+    <p class="section-head">// pricing</p>
+    <h2>One flat fee.<br>No surprises.</h2>
+    <div class="plans-grid">
+
+      <div class="plan-card featured">
+        <div class="plan-badge">MOST POPULAR</div>
+        <div class="plan-name">Standard Migration</div>
+        <div class="plan-price">$199</div>
+        <div class="plan-period">one-time · no subscription</div>
+        <ul class="plan-features">
+          <li>Full customer list extraction</li>
+          <li>Active subscription mapping</li>
+          <li>24-month service history</li>
+          <li>Open invoices export</li>
+          <li>GorillaDesk, Jobber, or Housecall Pro output</li>
+          <li>Plain-English import guide</li>
+          <li>Migration validation report</li>
+          <li>48-hour turnaround guaranteed</li>
+        </ul>
+        <a href="https://buy.stripe.com/REPLACE_WITH_STANDARD_LINK" class="btn-plan btn-plan-primary">
+          Get started — $199 →
+        </a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-name">Concierge Migration</div>
+        <div class="plan-price">$349</div>
+        <div class="plan-period">one-time · includes support call</div>
+        <ul class="plan-features">
+          <li>Everything in Standard</li>
+          <li>API-direct data pull (we handle extraction)</li>
+          <li>Chemical log PDF archive (state compliance)</li>
+          <li>Technician &amp; route mapping</li>
+          <li>30-min onboarding call post-delivery</li>
+          <li>We answer any import questions for 7 days</li>
+          <li>Priority 24-hour turnaround</li>
+          <li>PestPac also supported</li>
+        </ul>
+        <a href="https://buy.stripe.com/REPLACE_WITH_CONCIERGE_LINK" class="btn-plan btn-plan-secondary">
+          Get Concierge — $349 →
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <p class="section-head">// questions</p>
+  <h2>Things operators ask.</h2>
+
+  <div class="faq-item">
+    <div class="faq-q">Will FieldRoutes block you from getting my data?</div>
+    <div class="faq-a">No. We work entirely with data you already have legitimate access to — the exports FieldRoutes provides, plus the built-in report exports most operators don't know about. If you're still an active customer, you also have API access, which we can use with your permission. We don't do anything outside the bounds of your existing contract.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What if my FieldRoutes export is incomplete?</div>
+    <div class="faq-a">It will be — that's the whole problem. We'll email you instructions for pulling every available report from within FieldRoutes, including sections most operators never export. What we can't get, we flag clearly in the migration report so you know what to re-enter manually.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">How do you keep my customer data secure?</div>
+    <div class="faq-a">Your files are uploaded to an encrypted, temporary link. We process your data and delete the source files within 72 hours of delivering your migration package. We don't store customer data long-term and we never share it with anyone.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What if the migration doesn't work?</div>
+    <div class="faq-a">We'll fix it. If any of the output files don't import cleanly into your destination platform, email us and we'll troubleshoot until it works. If we can't get it working within 5 business days, full refund.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Do you support platforms other than GorillaDesk and Jobber?</div>
+    <div class="faq-a">Currently: GorillaDesk, Jobber, and Housecall Pro. PestPac and ServiceTitan are available on the Concierge plan. If your destination platform isn't listed, email us before purchasing — we may still be able to help.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Can you help migrate from PestPac too?</div>
+    <div class="faq-a">Yes — on the Concierge plan. PestPac's export format is different but more complete than FieldRoutes. We support it for operators migrating from either platform.</div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <h2>Stop letting them<br><em>hold you hostage.</em></h2>
+  <p>$199 flat. 48 hours. Your data, in your hands.</p>
+  <a href="#pricing" class="btn-primary">Get started →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    SwitchKit by <a href="https://t12n.ai">t12n.ai</a> &nbsp;·&nbsp;
+    <a href="mailto:steven@t12n.ai">steven@t12n.ai</a> &nbsp;·&nbsp;
+    Questions? <a href="mailto:steven@t12n.ai">Email us before purchasing</a>
+  </p>
+</footer>
+
+</body>
+</html>

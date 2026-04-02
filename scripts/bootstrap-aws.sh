@@ -194,8 +194,8 @@ echo "    ✓"
 # ── IAM OIDC provider ─────────────────────────────────────────────────
 echo "==> IAM OIDC provider"
 if ! aws iam get-open-id-connect-provider \
-     --open-id-connect-provider-arn "$OIDC_ARN" 2>/dev/null; then
-  aws iam create-openid-connect-provider \
+     --open-id-connect-provider-arn "$OIDC_ARN" &>/dev/null; then
+  aws iam create-open-id-connect-provider \
     --url "https://token.actions.githubusercontent.com" \
     --client-id-list "sts.amazonaws.com" \
     --thumbprint-list "6938fd4d98bab03faadb97b34396831e3780aea1"

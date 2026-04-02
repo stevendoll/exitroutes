@@ -1,0 +1,24 @@
+SubscriptionID,CustomerID,ServiceType,Frequency,Price,NextServiceDate,TechnicianID,Status,AutoPay,ContractStartDate,ContractEndDate
+SUB-2001,1001,General Pest Control,Monthly,89.00,2026-04-15,T03,Active,1,2021-03-15,
+SUB-2002,1002,General Pest Control,Quarterly,65.00,2026-05-01,T01,Active,1,2021-07-22,
+SUB-2003,1003,Commercial Pest Control,Monthly,185.00,2026-04-20,T02,Active,0,2020-11-08,2026-11-08
+SUB-2004,1003,Rodent Control,Monthly,75.00,2026-04-20,T02,Active,0,2021-06-01,2026-06-01
+SUB-2005,1004,General Pest Control,Bi-Monthly,72.00,2026-05-10,T01,Active,1,2022-01-30,
+SUB-2006,1005,General Pest Control,Monthly,89.00,2026-04-18,T03,Active,1,2021-09-14,
+SUB-2007,1005,Mosquito Control,Monthly,55.00,2026-04-18,T03,Active,1,2022-05-01,
+SUB-2008,1006,General Pest Control,Quarterly,65.00,2026-06-01,T01,Active,1,2022-04-05,
+SUB-2009,1007,General Pest Control,Monthly,89.00,2026-04-22,T04,Active,0,2021-06-18,
+SUB-2010,1008,General Pest Control,Monthly,89.00,2024-12-01,T01,Inactive,0,2020-08-11,2024-12-01
+SUB-2011,1009,General Pest Control,Bi-Monthly,72.00,2026-05-15,T02,Active,1,2021-02-28,
+SUB-2012,1010,General Pest Control,Monthly,89.00,2026-04-25,T03,Active,1,2022-08-17,
+SUB-2013,1012,General Pest Control,Quarterly,65.00,2026-07-01,T04,Active,1,2020-05-14,
+SUB-2014,1013,General Pest Control,Quarterly,65.00,2026-04-30,T01,Active,0,2023-01-09,
+SUB-2015,1014,Commercial Pest Control,Monthly,225.00,2026-04-16,T02,Active,1,2021-11-30,2026-11-30
+SUB-2016,1015,General Pest Control,Quarterly,65.00,2026-05-20,T03,Active,0,2020-03-22,
+SUB-2017,1016,General Pest Control,Monthly,89.00,2026-04-28,T04,Active,1,2022-06-01,
+SUB-2018,1017,General Pest Control,Monthly,89.00,2026-04-14,T01,Active,1,2021-04-19,
+SUB-2019,1018,General Pest Control,Monthly,89.00,2021-12-01,T02,Inactive,0,2019-12-01,2021-12-01
+SUB-2020,1020,General Pest Control,Monthly,89.00,2026-04-17,T03,Active,1,2022-10-05,
+SUB-2021,1021,General Pest Control,Quarterly,65.00,2026-06-15,T04,Active,0,2020-07-15,
+SUB-2022,1022,General Pest Control,Monthly,89.00,2026-04-12,T01,Active,1,2023-03-28,
+SUB-2023,1025,General Pest Control,Bi-Monthly,72.00,2026-05-07,T02,Active,1,2021-08-07,

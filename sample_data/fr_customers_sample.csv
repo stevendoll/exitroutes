@@ -1,0 +1,26 @@
+CustomerID,FirstName,LastName,CompanyName,BillingAddress1,BillingAddress2,BillingCity,BillingState,BillingZip,ServiceAddress1,ServiceAddress2,ServiceCity,ServiceState,ServiceZip,Phone1,Phone2,Email,Balance,Notes,IsActive,CreatedDate
+1001,James,Thornton,Thornton Pest Solutions,142 Oak Ridge Rd,,Marietta,GA,30062,142 Oak Ridge Rd,,Marietta,GA,30062,770-555-0142,,jthornton@gmail.com,0.00,Monthly perimeter customer since 2021,1,2021-03-15
+1002,Maria,Gonzalez,,891 Sunset Blvd,Apt 4B,Atlanta,GA,30308,891 Sunset Blvd,Apt 4B,Atlanta,GA,30308,(404) 555-0891,,mariag@hotmail.com,45.00,Has two dogs — knock loud,1,2021-07-22
+1003,Robert,Kim,Kim Family Properties,3300 Peachtree Rd NE,Suite 200,Atlanta,GA,30326,3300 Peachtree Rd NE,Suite 200,Atlanta,GA,30326,4045550033,4045550034,r.kim@kimproperties.com,0.00,Commercial account — 3 units,1,2020-11-08
+1004,Susan,Hartley,,55 Magnolia Ln,,Smyrna,GA,30080,55 Magnolia Ln,,Smyrna,GA,30080,770-555-0055,,s.hartley@yahoo.com,0.00,,1,2022-01-30
+1005,David,Patel,,2201 Briarcliff Rd,,Atlanta,GA,30329,2201 Briarcliff Rd,,Atlanta,GA,30329,4045552201,,dpatel@gmail.com,120.00,Mosquito add-on since May,1,2021-09-14
+1006,Linda,Torres,,78 Elm Street,,Kennesaw,GA,30144,212 Roswell Rd,,Marietta,GA,30062,678-555-0078,,ltorres@outlook.com,0.00,Billing address differs — rental property,1,2022-04-05
+1007,Michael,Johnson,,,,Decatur,GA,30030,450 Commerce Dr,,Decatur,GA,30030,4045550450,,(missing),0.00,No email on file — call only,1,2021-06-18
+1008,Patricia,Williams,,1890 Monroe Dr NE,,Atlanta,GA,30324,1890 Monroe Dr NE,,Atlanta,GA,30324,(404)555-1890,,pwilliams1890@gmail.com,0.00,,0,2020-08-11
+1009,Charles,Brown,,4441 Tilly Mill Rd,,Dunwoody,GA,30338,4441 Tilly Mill Rd,,Dunwoody,GA,30338,770.555.4441,,cbrown@comcast.net,85.50,Bi-monthly schedule,1,2021-02-28
+1010,Barbara,Davis,,902 Johnson Ferry Rd,,Marietta,GA,30068,902 Johnson Ferry Rd,,Marietta,GA,30068,7705550902,,bdavis@gmail.com,0.00,,1,2022-08-17
+1011,James,Thornton,,145 Oak Ridge Rd,,Marietta,GA,30062,145 Oak Ridge Rd,,Marietta,GA,30062,770-555-0142,,jthornton@gmail.com,0.00,POSSIBLE DUPLICATE of #1001,1,2021-03-22
+1012,Richard,Wilson,,610 Holcomb Bridge Rd,,Roswell,GA,30076,610 Holcomb Bridge Rd,,Roswell,GA,30076,7705550610,,rwilson@yahoo.com,0.00,,1,2020-05-14
+1013,Nancy,Moore,,321 Ponce de Leon Ave,,Atlanta,GA,30308,321 Ponce de Leon Ave,,Atlanta,GA,30308,4045550321,,nmoore@gmail.com,200.00,Quarterly only,1,2023-01-09
+1014,Thomas,Anderson,Anderson Roofing LLC,875 Industrial Blvd,,Norcross,GA,30093,875 Industrial Blvd,,Norcross,GA,30093,7705550875,7705550876,tanderson@andersonroofing.com,0.00,Commercial — warehouse,1,2021-11-30
+1015,Dorothy,Jackson,,1500 Peachford Rd,,Dunwoody,GA,30338,1500 Peachford Rd,,Dunwoody,GA,30338,7705551500,,(no email),0.00,Elderly customer — call before visit,1,2020-03-22
+1016,Christopher,White,,33 Vinings Ln,,Atlanta,GA,30339,33 Vinings Ln,,Atlanta,GA,30339,4045550033,,cwhite@gmail.com,0.00,,1,2022-06-01
+1017,Margaret,Harris,,2780 Wesley Chapel Rd,,Decatur,GA,30034,2780 Wesley Chapel Rd,,Decatur,GA,30034,4045552780,,mharris@bellsouth.net,55.00,,1,2021-04-19
+1018,Daniel,Martinez,,7 Brandywine Blvd,,Woodstock,GA,30188,7 Brandywine Blvd,,Woodstock,GA,30188,678-555-0007,,dmartinez@gmail.com,0.00,,0,2019-12-01
+1019,Lisa,Robinson,,540 N. Highland Ave,,Atlanta,GA,30307,540 N. Highland Ave,,Atlanta,GA,30307,404-555-PEST,,(invalid phone),0.00,Phone number is invalid — needs update,1,2023-02-14
+1020,Paul,Clark,,100 Hampton Trace,,Alpharetta,GA,30022,100 Hampton Trace,,Alpharetta,GA,30022,7705550100,,pclark@outlook.com,0.00,,1,2022-10-05
+1021,Sandra,Lewis,Lewis Family Trust,450 Buckhead Ave,,Atlanta,GA,30305,450 Buckhead Ave,,Atlanta,GA,30305,4045550450,,slewis@lewisfamilytrust.org,340.00,Invoice overdue 90 days,1,2020-07-15
+1022,Mark,Lee,,1188 Windy Hill Rd,,Smyrna,GA,30080,1188 Windy Hill Rd,,Smyrna,GA,30080,7705551188,,mlee1188@gmail.com,0.00,,1,2023-03-28
+1023,Susan,Hartley,,55 Magnolia Lane,,Smyrna,GA,30080,55 Magnolia Lane,,Smyrna,GA,30080,770-555-0055,,s.hartley@yahoo.com,0.00,POSSIBLE DUPLICATE of #1004,1,2022-02-14
+1024,Kevin,Walker,,3389 Chamblee Tucker Rd,,Atlanta,GA,30341,3389 Chamblee Tucker Rd,,Atlanta,GA,30341,7705553389,,kwalker@gmail.com,0.00,,0,2018-09-30
+1025,Helen,Hall,,29 Juniper St NE,,Atlanta,GA,30309,29 Juniper St NE,,Atlanta,GA,30309,4045550029,,hhall@aol.com,0.00,,1,2021-08-07
