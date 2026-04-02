@@ -52,29 +52,31 @@ else
 fi
 
 # Add DNS validation CNAME to Cloudflare
-VALIDATION=$(aws acm describe-certificate \
+# Add all validation CNAMEs (one per SAN — e.g. root + www)
+VALIDATIONS=$(aws acm describe-certificate \
   --certificate-arn "$CERT_ARN" \
   --region us-east-1 \
-  --query 'Certificate.DomainValidationOptions[0].ResourceRecord')
+  --query 'Certificate.DomainValidationOptions[*].ResourceRecord')
 
-VAL_NAME=$(echo "$VALIDATION" | jq -r '.Name' | sed 's/\.$//')
-VAL_VALUE=$(echo "$VALIDATION" | jq -r '.Value' | sed 's/\.$//')
+echo "$VALIDATIONS" | jq -c '.[]' | while read -r record; do
+  VAL_NAME=$(echo "$record" | jq -r '.Name' | sed 's/\.$//')
+  VAL_VALUE=$(echo "$record" | jq -r '.Value' | sed 's/\.$//')
 
-EXISTING=$(curl -s \
-  "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/dns_records?type=CNAME&name=${VAL_NAME}" \
-  -H "Authorization: Bearer ${CF_API_TOKEN}" | jq -r '.result | length')
+  EXISTING=$(curl -s \
+    "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/dns_records?type=CNAME&name=${VAL_NAME}" \
+    -H "Authorization: Bearer ${CF_API_TOKEN}" | jq -r '.result | length')
 
-if [ "$EXISTING" = "0" ]; then
-  echo "    adding Cloudflare validation CNAME..."
-  curl -s -X POST \
-    "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/dns_records" \
-    -H "Authorization: Bearer ${CF_API_TOKEN}" \
-    -H "Content-Type: application/json" \
-    -d "{\"type\":\"CNAME\",\"name\":\"${VAL_NAME}\",\"content\":\"${VAL_VALUE}\",\"ttl\":300,\"proxied\":false}" \
-    | jq -r 'if .success then "    ✓ DNS record added" else "    ✗ \(.errors[0].message)" end'
-else
-  echo "    validation CNAME already in Cloudflare"
-fi
+  if [ "$EXISTING" = "0" ]; then
+    curl -s -X POST \
+      "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/dns_records" \
+      -H "Authorization: Bearer ${CF_API_TOKEN}" \
+      -H "Content-Type: application/json" \
+      -d "{\"type\":\"CNAME\",\"name\":\"${VAL_NAME}\",\"content\":\"${VAL_VALUE}\",\"ttl\":300,\"proxied\":false}" \
+      | jq -r 'if .success then "    ✓ added: \(.result.name)" else "    ✗ \(.errors[0].message)" end'
+  else
+    echo "    already exists: ${VAL_NAME}"
+  fi
+done
 
 echo "    waiting for certificate to validate (up to 5 min)..."
 aws acm wait certificate-validated \
