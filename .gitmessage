@@ -1,0 +1,9 @@
+# <type>: <subject> (50 chars max)
+#
+# Types: feat | fix | test | docs | refactor | chore
+#
+# Body (optional — wrap at 72 chars):
+#
+#
+# Trailers (required):
+Prompted-by: claude-sonnet-4-6

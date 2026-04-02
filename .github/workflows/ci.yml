@@ -1,0 +1,29 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install pytest pytest-cov pandas stripe boto3
+
+      - name: Run tests
+        run: pytest tests/ -v --tb=short
+
+      - name: Coverage report
+        run: pytest tests/ --cov=app --cov=api --cov-report=term-missing --ignore=tests/test_webhook.py
+        continue-on-error: true
