@@ -34,6 +34,14 @@ sed -i '' \
 echo "✓ Stripe links patched into index.html"
 echo "  Standard:  ${STRIPE_LINK_STANDARD}"
 echo "  Concierge: ${STRIPE_LINK_CONCIERGE}"
+
+# Patch Typeform link into thank-you.html
+THANKYOU="$ROOT/thank-you.html"
+if [ -f "$THANKYOU" ] && [ -n "${TYPEFORM_LINK:-}" ]; then
+  sed -i '' "s|TYPEFORM_PLACEHOLDER|${TYPEFORM_LINK}|g" "$THANKYOU"
+  echo "✓ Typeform link patched into thank-you.html"
+fi
+
 echo ""
 echo "  Commit and push to deploy:"
-echo "  git add index.html && git commit -m 'add Stripe payment links' && git push"
+echo "  git add index.html thank-you.html && git commit -m 'add Stripe and Typeform links' && git push"
