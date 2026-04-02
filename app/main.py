@@ -112,7 +112,7 @@ def metric_card(value, label):
 
 
 # ── Header ────────────────────────────────────────────────────────────
-st.markdown("### ⚡ SwitchKit")
+st.markdown("### ⚡ ExitRoutes")
 st.markdown("#### FieldRoutes Migration Tool")
 st.markdown("---")
 

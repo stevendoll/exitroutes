@@ -1,0 +1,50 @@
+{
+  "destination": "Housecall Pro",
+  "customers": {
+    "column_map": {
+      "FirstName":        "first_name",
+      "LastName":         "last_name",
+      "CompanyName":      "company_name",
+      "Email":            "email",
+      "Phone1":           "mobile_number",
+      "Phone2":           "home_number",
+      "BillingAddress1":  "street",
+      "BillingCity":      "city",
+      "BillingState":     "state",
+      "BillingZip":       "zip",
+      "ServiceAddress1":  "service_street",
+      "ServiceCity":      "service_city",
+      "ServiceState":     "service_state",
+      "ServiceZip":       "service_zip",
+      "Notes":            "customer_notes",
+      "Balance":          "outstanding_balance"
+    },
+    "drop": ["CustomerID", "BillingAddress2", "ServiceAddress2", "IsActive", "CreatedDate", "address_is_same"]
+  },
+  "subscriptions": {
+    "column_map": {
+      "CustomerID":       "customer_id",
+      "ServiceType":      "job_type",
+      "Frequency":        "recurrence",
+      "Price":            "price",
+      "NextServiceDate":  "next_scheduled_date",
+      "Status":           "status",
+      "AutoPay":          "autopay"
+    },
+    "drop": ["SubscriptionID", "TechnicianID", "ContractStartDate", "ContractEndDate"]
+  },
+  "service_history": {
+    "column_map": {
+      "CustomerID":       "customer_id",
+      "ServiceDate":      "completed_on",
+      "TechnicianID":     "assigned_employee",
+      "Status":           "status",
+      "ChemicalsUsed":    "line_item_name",
+      "AmountApplied":    "quantity",
+      "Notes":            "job_notes",
+      "InvoiceAmount":    "invoice_total",
+      "AmountPaid":       "amount_collected"
+    },
+    "drop": ["AppointmentID", "SubscriptionID"]
+  }
+}

@@ -1,5 +1,5 @@
 .PHONY: bootstrap bootstrap-aws bootstrap-cloudflare bootstrap-github bootstrap-lambda \
-        bootstrap-dynamo stripe deploy update-stripe secrets seed-admin dev test
+        bootstrap-dynamo stripe deploy update-stripe secrets setup-spa seed-admin dev test
 
 # Full bootstrap: AWS → Cloudflare → GitHub → Lambda → Stripe
 bootstrap: bootstrap-aws bootstrap-cloudflare bootstrap-github bootstrap-lambda stripe
@@ -22,9 +22,9 @@ bootstrap-dynamo:
 seed-admin:
 	source .env && python scripts/seed-admin.py
 
-# Run Vite dev server
-dev:
-	cd ui && npm run dev
+# Configure CloudFront for SPA routing (run once after bootstrap-aws)
+setup-spa:
+	bash scripts/setup-cloudfront-spa.sh
 
 # Run all tests
 test:
@@ -34,7 +34,7 @@ test:
 stripe:
 	python scripts/create_stripe_products.py
 
-# Patch Stripe links + Typeform link into HTML, then push
+# Patch Stripe links into HTML, then push
 update-stripe:
 	bash scripts/update-stripe-links.sh
 
@@ -44,6 +44,7 @@ secrets:
 	gh secret set AWS_ROLE_ARN                --body "$$AWS_ROLE_ARN" && \
 	gh secret set S3_BUCKET                   --body "$$S3_BUCKET" && \
 	gh secret set CLOUDFRONT_DISTRIBUTION_ID  --body "$$CLOUDFRONT_DISTRIBUTION_ID" && \
+	gh secret set API_URL                     --body "$$API_URL" && \
 	gh secret set STRIPE_WEBHOOK_SECRET       --body "$$STRIPE_WEBHOOK_SECRET" && \
 	gh secret set DYNAMO_TABLE_NAME           --body "$$DYNAMO_TABLE_NAME" && \
 	gh secret set MAGIC_LINK_BASE_URL         --body "$$MAGIC_LINK_BASE_URL" && \
@@ -52,16 +53,22 @@ secrets:
 	gh secret set SLACKMAIL_API_KEY           --body "$$SLACKMAIL_API_KEY" && \
 	echo "✓ All secrets set"
 
+# Local Vite dev server
+dev:
+	cd ui && npm run dev
+
 # Manual deploy (bypasses GitHub Actions — for emergencies)
 deploy:
 	@source .env && \
-	aws s3 sync . s3://$$S3_BUCKET \
-		--exclude "*" \
-		--exclude ".venv/*" \
-		--exclude "ui/node_modules/*" \
-		--include "index.html" \
-		--include "thank-you.html" \
-		--include "admin/*.html" \
+	cd ui && npm run build && cd .. && \
+	aws s3 sync ui/dist/assets s3://$$S3_BUCKET/assets \
+		--delete \
+		--cache-control "public, max-age=31536000, immutable" && \
+	aws s3 sync ui/dist s3://$$S3_BUCKET \
+		--exclude "assets/*" \
+		--delete \
+		--cache-control "public, max-age=300" && \
+	aws s3 sync admin s3://$$S3_BUCKET/admin \
 		--delete \
 		--cache-control "public, max-age=300" && \
 	aws cloudfront create-invalidation \

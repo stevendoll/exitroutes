@@ -126,9 +126,9 @@ Proxy must be **off** (DNS only) when using CloudFront with a custom SSL cert �
 ## Stripe setup (manual — 5 min)
 
 1. Go to Stripe dashboard → **Payment Links** → Create link
-2. **Standard**: `SwitchKit Standard Migration` — $199 one-time
+2. **Standard**: `ExitRoutes Standard Migration` — $199 one-time
    - Success URL: `https://exitroutes.app/thank-you?plan=standard`
-3. **Concierge**: `SwitchKit Concierge Migration` — $349 one-time
+3. **Concierge**: `ExitRoutes Concierge Migration` — $349 one-time
    - Success URL: `https://exitroutes.app/thank-you?plan=concierge`
 4. Paste the URLs into `.env` as `STRIPE_LINK_STANDARD` and `STRIPE_LINK_CONCIERGE`
 5. Run: `bash scripts/update-stripe-links.sh` — patches `index.html` and commits
@@ -259,7 +259,7 @@ JSON
 
 ## Naming
 
-- **Product**: SwitchKit
+- **Product**: ExitRoutes
 - **Domain**: exitroutes.app
 - **GitHub repo**: `stevendoll/exitroutes`
 - **AWS resources**: prefixed `exitroutes-`
