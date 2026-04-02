@@ -94,7 +94,7 @@ def _send_confirmation(name: str, email: str, plan_label: str):
     first = name.split()[0] if name else "there"
     intake_url = TYPEFORM_LINK or "https://exitroutes.app"
 
-    subject = f"Your SwitchKit order — next steps"
+    subject = f"Your exitroutes order — next steps"
     body = f"""\
 Hi {first},
 
@@ -115,7 +115,7 @@ Here's what happens next:
 Any questions, just reply to this email.
 
 — Steven
-steven@t12n.ai | SwitchKit
+steven@t12n.ai | exitroutes
 """
 
     ses = boto3.client("ses", region_name="us-east-1")

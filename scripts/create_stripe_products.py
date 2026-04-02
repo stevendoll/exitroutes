@@ -65,7 +65,7 @@ def main():
 
     # ── Standard ─────────────────────────────────────────────────────
     standard_product = stripe.Product.create(
-        name="SwitchKit Standard Migration",
+        name="exitroutes Standard Migration",
         description=(
             "Full FieldRoutes data migration — customers, subscriptions, "
             "24-month service history, open invoices. GorillaDesk, Jobber, "
@@ -90,7 +90,7 @@ def main():
 
     # ── Concierge ────────────────────────────────────────────────────
     concierge_product = stripe.Product.create(
-        name="SwitchKit Concierge Migration",
+        name="exitroutes Concierge Migration",
         description=(
             "Everything in Standard + API-direct data pull, chemical log archive, "
             "technician & route mapping, 30-min onboarding call, 7-day support. "
@@ -121,7 +121,7 @@ def main():
         endpoint = stripe.WebhookEndpoint.create(
             url=webhook_url,
             enabled_events=["checkout.session.completed"],
-            description="SwitchKit purchase handler",
+            description="exitroutes purchase handler",
         )
         webhook_secret = endpoint.secret
         print(f"    URL: {webhook_url}")
