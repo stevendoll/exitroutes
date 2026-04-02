@@ -19,11 +19,11 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install pytest pytest-cov pandas stripe boto3
+        run: pip install -r requirements.txt
 
       - name: Run tests
         run: pytest tests/ -v --tb=short
 
       - name: Coverage report
-        run: pytest tests/ --cov=app --cov=api --cov-report=term-missing --ignore=tests/test_webhook.py
+        run: pytest tests/ --cov=app --cov=api --cov-report=term-missing
         continue-on-error: true

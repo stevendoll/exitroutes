@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — ExitRoutes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0A0F1C;
+      --surface: #111827;
+      --surface2: #162030;
+      --accent: #F5C842;
+      --accent-dim: rgba(245,200,66,0.12);
+      --text: #F0EDE4;
+      --muted: #8899AA;
+      --border: #1E2D40;
+      --success: #2ECC71;
+      --danger: #E74C3C;
+      --font-head: 'Syne', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --font-body: 'Source Serif 4', serif;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0.9rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,15,28,0.97);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+      flex-shrink: 0;
+    }
+    .logo span { color: var(--muted); }
+    .admin-tag {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 2px 5px;
+      margin-left: 5px;
+      vertical-align: middle;
+    }
+    .stats-strip {
+      display: flex;
+      gap: 1.25rem;
+      flex: 1;
+    }
+    .stat {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    .stat strong { color: var(--text); }
+    .logout-btn {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.35rem 0.85rem;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .logout-btn:hover { color: var(--text); border-color: var(--muted); }
+
+    /* TOOLBAR */
+    .toolbar {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: relative;
+    }
+    .btn {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 0.6rem 1.1rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn:disabled { opacity: 0.5; cursor: default; }
+    .btn-primary { background: var(--accent); color: #0A0F1C; }
+    .btn-primary:hover:not(:disabled) { opacity: 0.9; }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover:not(:disabled) { border-color: var(--muted); }
+
+    /* Scraper dropdown */
+    .scraper-wrap { position: relative; }
+    .source-picker {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      display: none;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-width: 180px;
+      z-index: 50;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .source-picker.open { display: flex; }
+    .source-picker label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .source-picker input[type="checkbox"] { accent-color: var(--accent); }
+    .picker-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .picker-actions button {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      letter-spacing: 0.03em;
+    }
+    #doRunBtn { background: var(--accent); color: #0A0F1C; font-weight: 500; }
+    #doRunBtn:hover:not(:disabled) { opacity: 0.9; }
+    #doRunBtn:disabled { opacity: 0.5; cursor: default; }
+    #cancelPickerBtn { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+    #cancelPickerBtn:hover { color: var(--text); }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      white-space: nowrap;
+    }
+    .contact-row {
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+    .contact-row:hover { background: var(--surface); }
+    .contact-row.expanded { background: var(--surface2); border-bottom: none; }
+    .contact-row td {
+      padding: 0.75rem 1rem;
+      vertical-align: middle;
+      font-size: 0.88rem;
+    }
+    .contact-row td.biz { font-weight: 600; font-family: var(--font-body); }
+    .contact-row td.reviewer { color: var(--muted); font-size: 0.82rem; }
+    .contact-row td.muted { color: var(--muted); font-size: 0.78rem; font-family: var(--font-mono); }
+    .contact-row td.arrow {
+      color: var(--muted);
+      font-size: 0.7rem;
+      text-align: right;
+      padding-right: 1.25rem;
+    }
+    .detail-row td { padding: 0; }
+    .detail-panel {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 700px) { .detail-grid { grid-template-columns: 1fr; } }
+    .detail-field { margin-bottom: 0.75rem; }
+    .detail-field label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+    .detail-field span, .detail-field blockquote {
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .detail-field blockquote {
+      font-style: italic;
+      color: var(--muted);
+      border-left: 2px solid var(--border);
+      padding-left: 0.75rem;
+      margin: 0;
+    }
+    .detail-field textarea,
+    .detail-field input[type="date"],
+    .detail-field select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      padding: 0.5rem 0.75rem;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s;
+      resize: vertical;
+    }
+    .detail-field textarea:focus,
+    .detail-field input[type="date"]:focus,
+    .detail-field select:focus { border-color: var(--accent); }
+    .detail-field select option { background: var(--surface); }
+    .flags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .flag-chip {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+    .flag-on  { background: rgba(231,76,60,0.15); color: var(--danger); border: 1px solid rgba(231,76,60,0.3); }
+    .flag-off { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+    .detail-actions {
+      display: flex;
+      gap: 0.75rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .btn-enrich {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.03em;
+    }
+    .btn-enrich:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .btn-enrich:disabled { opacity: 0.5; cursor: default; }
+
+    /* BADGES */
+    .pain-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+    .pain-high { background: rgba(231,76,60,0.15); color: var(--danger); }
+    .pain-mid  { background: rgba(245,200,66,0.12); color: var(--accent); }
+    .pain-low  { background: rgba(46,204,113,0.1);  color: var(--success); }
+    .source-tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      display: inline-block;
+    }
+    .status-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .status-new       { color: var(--text); }
+    .status-contacted { color: var(--accent); }
+    .status-converted { color: var(--success); }
+    .status-skip      { color: var(--muted); opacity: 0.5; }
+
+    /* EMPTY / LOADING */
+    .empty-row td, .loading-row td {
+      padding: 3rem;
+      text-align: center;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* TOAST */
+    #toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text);
+      max-width: 320px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      z-index: 200;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.toast-error { border-color: var(--danger); color: var(--danger); }
+    #toast.toast-ok    { border-color: var(--success); color: var(--success); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">exit<span>routes</span><span class="admin-tag">admin</span></div>
+  <div class="stats-strip" id="statsStrip">
+    <span class="stat">loading…</span>
+  </div>
+  <button class="logout-btn" onclick="logout()">logout</button>
+</nav>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="scraper-wrap">
+    <button class="btn btn-secondary" id="scraperToggleBtn" onclick="togglePicker()">Run scraper ▾</button>
+    <div class="source-picker" id="sourcePicker">
+      <label><input type="checkbox" class="src-cb" value="capterra" checked> capterra</label>
+      <label><input type="checkbox" class="src-cb" value="g2" checked> g2</label>
+      <label><input type="checkbox" class="src-cb" value="softwareadvice" checked> softwareadvice</label>
+      <label><input type="checkbox" class="src-cb" value="getapp" checked> getapp</label>
+      <label><input type="checkbox" class="src-cb" value="reddit" checked> reddit</label>
+      <div class="picker-actions">
+        <button id="doRunBtn" onclick="runScraper()">Run</button>
+        <button id="cancelPickerBtn" onclick="togglePicker()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-secondary" id="enrichAllBtn" onclick="enrichNext20()">Enrich next 20</button>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Business</th>
+        <th>Reviewer</th>
+        <th>Source</th>
+        <th>Pain</th>
+        <th>Status</th>
+        <th>Scraped</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="contactsBody">
+      <tr class="loading-row"><td colspan="7">loading contacts…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const API = 'https://api.exitroutes.app';
+
+  const state = {
+    contacts:       [],
+    expandedId:     null,
+    enriching:      false,
+    enrichProgress: 0,
+    pickerOpen:     false,
+  };
+
+  // ── Auth guard ────────────────────────────────────────────────────────────
+
+  async function init() {
+    try {
+      const res = await apiFetch('/contacts?limit=200');
+      if (res.status === 403 || res.status === 401) {
+        location.replace('/admin/login.html');
+        return;
+      }
+      const data = await res.json();
+      state.contacts = data.items || data || [];
+      renderContacts();
+      renderStats();
+    } catch (_) {
+      location.replace('/admin/login.html');
+    }
+  }
+
+  // ── API helper ────────────────────────────────────────────────────────────
+
+  function apiFetch(path, opts = {}) {
+    return fetch(API + path, {
+      credentials: 'include',
+      ...opts,
+      headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) },
+    });
+  }
+
+  // ── Rendering ─────────────────────────────────────────────────────────────
+
+  function esc(str) {
+    return String(str ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    try {
+      return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch (_) { return iso.slice(0, 10); }
+  }
+
+  function painClass(score) {
+    if (score >= 8) return 'pain-high';
+    if (score >= 5) return 'pain-mid';
+    return 'pain-low';
+  }
+
+  function flag(val, label) {
+    const on = val === true || val === 'true';
+    return `<span class="flag-chip ${on ? 'flag-on' : 'flag-off'}">${on ? '✓' : '–'} ${label}</span>`;
+  }
+
+  function renderStats() {
+    const leads      = state.contacts.filter(c => c.contact_type === 'lead');
+    const noEnrich   = leads.filter(c => !c.email && !c.website).length;
+    const avgPain    = leads.length
+      ? (leads.reduce((s, c) => s + (Number(c.pain_score) || 0), 0) / leads.length).toFixed(1)
+      : '—';
+    const byStatus   = {};
+    leads.forEach(c => { const s = c.outreach_status || 'new'; byStatus[s] = (byStatus[s] || 0) + 1; });
+
+    document.getElementById('statsStrip').innerHTML = `
+      <span class="stat"><strong>${leads.length}</strong> leads</span>
+      <span class="stat"><strong>${noEnrich}</strong> need enrich</span>
+      <span class="stat">avg pain <strong>${avgPain}</strong></span>
+      <span class="stat"><strong>${byStatus['new'] || 0}</strong> new</span>
+      <span class="stat"><strong>${byStatus['contacted'] || 0}</strong> contacted</span>
+      <span class="stat"><strong>${byStatus['converted'] || 0}</strong> converted</span>
+    `;
+  }
+
+  function renderContacts() {
+    const body = document.getElementById('contactsBody');
+    if (!state.contacts.length) {
+      body.innerHTML = '<tr class="empty-row"><td colspan="7">No contacts yet. Run the scraper to populate leads.</td></tr>';
+      return;
+    }
+    body.innerHTML = state.contacts.map(c => {
+      const expanded = c.contact_id === state.expandedId;
+      const score    = Number(c.pain_score);
+      return `
+        <tr class="contact-row${expanded ? ' expanded' : ''}"
+            data-id="${esc(c.contact_id)}"
+            onclick="toggleExpand('${esc(c.contact_id)}')">
+          <td class="biz">${esc(c.business_name || '—')}</td>
+          <td class="reviewer">${esc(c.reviewer_name || '—')}</td>
+          <td><span class="source-tag">${esc(c.source || '—')}</span></td>
+          <td><span class="pain-badge ${painClass(score)}">${score || '—'}</span></td>
+          <td><span class="status-tag status-${esc(c.outreach_status || 'new')}">${esc(c.outreach_status || 'new')}</span></td>
+          <td class="muted">${fmtDate(c.scraped_at)}</td>
+          <td class="arrow">${expanded ? '▲' : '▼'}</td>
+        </tr>
+        ${expanded ? renderDetail(c) : ''}
+      `;
+    }).join('');
+  }
+
+  function renderDetail(c) {
+    const loc = [c.city, c.state].filter(Boolean).join(', ') || '—';
+    return `
+      <tr class="detail-row">
+        <td colspan="7">
+          <div class="detail-panel">
+            <div class="detail-grid">
+              <div>
+                <div class="detail-field"><label>Email</label><span>${esc(c.email || '—')}</span></div>
+                <div class="detail-field"><label>Website</label><span>${esc(c.website || '—')}</span></div>
+                <div class="detail-field"><label>Phone</label><span>${esc(c.phone || '—')}</span></div>
+                <div class="detail-field"><label>Location</label><span>${esc(loc)}</span></div>
+                <div class="detail-field"><label>Company size</label><span>${esc(c.company_size || '—')}</span></div>
+                <div class="detail-field"><label>Rating</label><span>${c.rating ?? '—'} / 5</span></div>
+                <div class="detail-field"><label>Source URL</label><span><a href="${esc(c.source_url || '')}" target="_blank" style="color:var(--accent);font-size:0.78rem;font-family:var(--font-mono)">${esc(c.source_url || '—')}</a></span></div>
+              </div>
+              <div>
+                <div class="detail-field">
+                  <label>Pain signals</label>
+                  <div class="flags">
+                    ${flag(c.is_data_hostage,  'data hostage')}
+                    ${flag(c.is_switching,      'switching')}
+                    ${flag(c.is_pricing_issue,  'pricing')}
+                    ${flag(c.is_support_issue,  'support')}
+                  </div>
+                </div>
+                <div class="detail-field">
+                  <label>Raw complaint</label>
+                  <blockquote>${esc(c.raw_complaint || '—')}</blockquote>
+                </div>
+                <div class="detail-field">
+                  <label>Status</label>
+                  <select onclick="event.stopPropagation()"
+                          onchange="saveStatus('${esc(c.contact_id)}', this.value)">
+                    ${['new','contacted','converted','skip'].map(s =>
+                      `<option value="${s}"${c.outreach_status === s ? ' selected' : ''}>${s}</option>`
+                    ).join('')}
+                  </select>
+                </div>
+                <div class="detail-field">
+                  <label>Follow-up date</label>
+                  <input type="date" value="${esc(c.follow_up_date || '')}"
+                         onclick="event.stopPropagation()"
+                         onchange="saveFollowUp('${esc(c.contact_id)}', this.value)" />
+                </div>
+                <div class="detail-field">
+                  <label>Outreach notes</label>
+                  <textarea rows="3"
+                            onclick="event.stopPropagation()"
+                            onblur="saveNotes('${esc(c.contact_id)}', this.value)">${esc(c.outreach_notes || '')}</textarea>
+                </div>
+              </div>
+            </div>
+            <div class="detail-actions">
+              <button class="btn-enrich" id="enrich-${esc(c.contact_id)}"
+                      onclick="event.stopPropagation(); enrichOne('${esc(c.contact_id)}')">
+                Enrich this contact
+              </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    `;
+  }
+
+  // ── Interactions ──────────────────────────────────────────────────────────
+
+  function toggleExpand(id) {
+    state.expandedId = state.expandedId === id ? null : id;
+    renderContacts();
+  }
+
+  function togglePicker() {
+    state.pickerOpen = !state.pickerOpen;
+    document.getElementById('sourcePicker').classList.toggle('open', state.pickerOpen);
+  }
+
+  // Close picker on outside click
+  document.addEventListener('click', e => {
+    if (state.pickerOpen && !e.target.closest('.scraper-wrap')) {
+      state.pickerOpen = false;
+      document.getElementById('sourcePicker').classList.remove('open');
+    }
+  });
+
+  // ── Scraper ───────────────────────────────────────────────────────────────
+
+  async function runScraper() {
+    const sources = [...document.querySelectorAll('.src-cb:checked')].map(el => el.value);
+    if (!sources.length) { toast('Select at least one source.', 'error'); return; }
+
+    const btn = document.getElementById('doRunBtn');
+    btn.disabled    = true;
+    btn.textContent = 'Starting…';
+
+    try {
+      const res  = await apiFetch('/scrape/run', {
+        method: 'POST',
+        body:   JSON.stringify({ sources }),
+      });
+      const data = await res.json();
+      toast(`Scrape started — run ID: ${data.run_id || 'ok'}`, 'ok');
+    } catch (_) {
+      toast('Failed to start scraper.', 'error');
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Run';
+      togglePicker();
+    }
+  }
+
+  // ── Enrich one ────────────────────────────────────────────────────────────
+
+  async function enrichOne(contactId) {
+    const btn = document.getElementById('enrich-' + contactId);
+    if (btn) { btn.disabled = true; btn.textContent = 'Enriching…'; }
+
+    try {
+      const res = await apiFetch(`/contacts/${contactId}/enrich`, { method: 'POST' });
+      if (res.ok) {
+        const updated = await res.json();
+        const idx = state.contacts.findIndex(c => c.contact_id === contactId);
+        if (idx !== -1) state.contacts[idx] = { ...state.contacts[idx], ...updated };
+        renderContacts();
+        renderStats();
+        toast('Enriched.', 'ok');
+      } else {
+        toast('Enrichment failed.', 'error');
+        if (btn) { btn.disabled = false; btn.textContent = 'Enrich this contact'; }
+      }
+    } catch (_) {
+      toast('Enrichment failed.', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = 'Enrich this contact'; }
+    }
+  }
+
+  // ── Enrich next 20 ────────────────────────────────────────────────────────
+
+  async function enrichNext20() {
+    if (state.enriching) return;
+
+    const targets = state.contacts
+      .filter(c => c.contact_type === 'lead' && !c.email && !c.website)
+      .sort((a, b) => (Number(b.pain_score) || 0) - (Number(a.pain_score) || 0))
+      .slice(0, 20);
+
+    if (!targets.length) { toast('No unenriched leads found.'); return; }
+
+    state.enriching      = true;
+    state.enrichProgress = 0;
+    updateEnrichAllBtn();
+
+    for (const c of targets) {
+      try {
+        const res = await apiFetch(`/contacts/${c.contact_id}/enrich`, { method: 'POST' });
+        if (res.ok) {
+          const updated = await res.json();
+          const idx = state.contacts.findIndex(x => x.contact_id === c.contact_id);
+          if (idx !== -1) state.contacts[idx] = { ...state.contacts[idx], ...updated };
+          renderContacts();
+        }
+      } catch (_) { /* continue on error */ }
+      state.enrichProgress++;
+      updateEnrichAllBtn();
+    }
+
+    renderStats();
+    state.enriching = false;
+    updateEnrichAllBtn();
+    toast(`Done — enriched ${state.enrichProgress} contacts.`, 'ok');
+  }
+
+  function updateEnrichAllBtn() {
+    const btn = document.getElementById('enrichAllBtn');
+    if (state.enriching) {
+      btn.textContent = `Enriching… ${state.enrichProgress}/20`;
+      btn.disabled    = true;
+    } else {
+      btn.textContent = 'Enrich next 20';
+      btn.disabled    = false;
+    }
+  }
+
+  // ── Inline PATCH ─────────────────────────────────────────────────────────
+
+  async function saveNotes(contactId, notes) {
+    const idx = state.contacts.findIndex(c => c.contact_id === contactId);
+    if (idx !== -1) state.contacts[idx].outreach_notes = notes;
+    await patchContact(contactId, { outreach_notes: notes });
+  }
+
+  async function saveFollowUp(contactId, date) {
+    const idx = state.contacts.findIndex(c => c.contact_id === contactId);
+    if (idx !== -1) state.contacts[idx].follow_up_date = date;
+    await patchContact(contactId, { follow_up_date: date });
+  }
+
+  async function saveStatus(contactId, status) {
+    const idx = state.contacts.findIndex(c => c.contact_id === contactId);
+    if (idx !== -1) state.contacts[idx].outreach_status = status;
+    renderContacts();
+    renderStats();
+    await patchContact(contactId, { outreach_status: status });
+  }
+
+  async function patchContact(contactId, fields) {
+    try {
+      await apiFetch(`/contacts/${contactId}`, {
+        method: 'PATCH',
+        body:   JSON.stringify(fields),
+      });
+    } catch (_) { toast('Save failed.', 'error'); }
+  }
+
+  // ── Logout ────────────────────────────────────────────────────────────────
+
+  async function logout() {
+    try { await apiFetch('/auth/logout', { method: 'POST' }); } catch (_) {}
+    location.replace('/admin/login.html');
+  }
+
+  // ── Toast ─────────────────────────────────────────────────────────────────
+
+  let toastTimer;
+  function toast(msg, type = '') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className   = 'show' + (type ? ' toast-' + type : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.className = ''; }, 3000);
+  }
+
+  // ── Boot ──────────────────────────────────────────────────────────────────
+
+  init();
+</script>
+
+</body>
+</html>

@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'api/**'
+      - 'lambda_handler.py'
       - '.github/workflows/deploy-api.yml'
 
 permissions:
@@ -32,27 +33,48 @@ jobs:
         run: |
           mkdir -p package
           pip install -r api/requirements.txt -t package/ -q
-          cp api/webhook.py package/
+          cp -r api package/
+          cp lambda_handler.py package/
           cd package && zip -r ../lambda.zip . -q
 
-      - name: Deploy to Lambda
+      - name: Deploy exitroutes-webhook
         run: |
           aws lambda update-function-code \
             --function-name exitroutes-webhook \
             --zip-file fileb://lambda.zip \
             --region us-east-1
 
-      - name: Update Lambda env vars
-        env:
-          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
-          TYPEFORM_LINK: ${{ secrets.TYPEFORM_LINK }}
+      - name: Update exitroutes-webhook env vars
         run: |
           aws lambda update-function-configuration \
             --function-name exitroutes-webhook \
             --environment "Variables={\
               STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }},\
-              FROM_EMAIL=steven@t12n.ai,\
+              FROM_EMAIL=steven@exitroutes.app,\
               TYPEFORM_LINK=${{ secrets.TYPEFORM_LINK }},\
+              SLACKMAIL_URL=${{ secrets.SLACKMAIL_URL }},\
+              SLACKMAIL_API_KEY=${{ secrets.SLACKMAIL_API_KEY }}\
+            }" \
+            --region us-east-1
+
+      - name: Deploy exitroutes-api
+        run: |
+          aws lambda update-function-code \
+            --function-name exitroutes-api \
+            --zip-file fileb://lambda.zip \
+            --region us-east-1
+
+      - name: Update exitroutes-api env vars
+        run: |
+          aws lambda update-function-configuration \
+            --function-name exitroutes-api \
+            --environment "Variables={\
+              DYNAMO_TABLE_NAME=${{ secrets.DYNAMO_TABLE_NAME }},\
+              MAGIC_LINK_BASE_URL=${{ secrets.MAGIC_LINK_BASE_URL }},\
+              MAGIC_LINK_TTL_MINUTES=15,\
+              SESSION_TTL_DAYS=7,\
+              ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }},\
+              FROM_EMAIL=steven@exitroutes.app,\
               SLACKMAIL_URL=${{ secrets.SLACKMAIL_URL }},\
               SLACKMAIL_API_KEY=${{ secrets.SLACKMAIL_API_KEY }}\
             }" \

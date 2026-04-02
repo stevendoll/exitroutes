@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'ui/**'
+      - 'admin/**'
       - '.github/workflows/deploy-ui.yml'
 
 permissions:
@@ -50,6 +51,10 @@ jobs:
           # HTML — short cache so deploys are visible quickly
           aws s3 sync ui/dist s3://${{ secrets.S3_BUCKET }} \
             --exclude "assets/*" \
+            --delete \
+            --cache-control "public, max-age=300"
+          # Admin HTML pages (plain HTML, not part of Vite build)
+          aws s3 sync admin s3://${{ secrets.S3_BUCKET }}/admin \
             --delete \
             --cache-control "public, max-age=300"
 
