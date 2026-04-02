@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '*.html'
+      - 'admin/**'
       - '.github/workflows/deploy-ui.yml'
 
 permissions:
@@ -28,7 +29,9 @@ jobs:
         run: |
           aws s3 sync . s3://${{ secrets.S3_BUCKET }} \
             --exclude "*" \
-            --include "*.html" \
+            --include "index.html" \
+            --include "thank-you.html" \
+            --include "admin/*.html" \
             --delete \
             --cache-control "public, max-age=300"
 

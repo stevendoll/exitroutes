@@ -1,3 +1,50 @@
+# SwitchKit — Complete MVP Handoff Document
+# Version 1.0 | Created: 2026-04-01
+
+---
+
+## 1. PRODUCT SUMMARY
+
+**What it is:** A $199 flat-rate data migration service for pest control operators leaving
+FieldRoutes/PestRoutes. Takes their messy, incomplete export and delivers clean, import-ready
+files for GorillaDesk, Jobber, or Housecall Pro within 48 hours.
+
+**The pain it solves:** FieldRoutes charges $500 for an incomplete data export and makes
+switching deliberately painful. Operators are publicly angry about this on Capterra, G2, and
+pest control Facebook groups. SwitchKit is the exit door.
+
+**Business model:**
+- $199 one-time: CSV migration (customer receives output files to import manually)
+- $349 one-time: Concierge migration (direct API pull + files + 30-min call)
+- $99/mo: Ongoing backup subscription (future — not in MVP)
+
+---
+
+## 2. LANDING PAGE
+
+### Design Direction
+Aesthetic: Industrial utility. Think pest control + technology. Dark navy background,
+safety-yellow accent, monospace accents for data-feel. NOT startup-friendly, NOT SaaS blue.
+It should feel like a tool built by an operator who was burned, not a VC-backed product.
+
+Font pairing: `Syne` (headers, heavy weight) + `IBM Plex Mono` (data/price elements) + 
+`Source Serif 4` (body). Available on Google Fonts.
+
+Color palette:
+- Background: #0A0F1C (near-black navy)
+- Surface: #111827 (card bg)
+- Accent: #F5C842 (safety yellow)
+- Text primary: #F0EDE4 (warm off-white)
+- Text secondary: #8899AA (muted blue-gray)
+- Border: #1E2D40 (subtle)
+- Success: #2ECC71
+- Danger: #E74C3C
+
+### FULL LANDING PAGE HTML
+
+Save as: `index.html`
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -516,8 +563,6 @@
     }
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
-    .admin-lock { opacity: 0.3; transition: opacity 0.2s; font-size: 0.85rem; }
-    .admin-lock:hover { opacity: 0.7; color: var(--muted) !important; }
 
     /* ANIMATIONS */
     @keyframes fadeUp {
@@ -548,7 +593,7 @@
   <h1>Your data is yours.<br>Take it <em>back.</em></h1>
   <p class="hero-sub">
     FieldRoutes is charging $500 for an incomplete export and making it nearly impossible to leave.
-    SwitchKit gets you out — customer list, service history, recurring schedules —
+    SwitchKit gets you out — customer list, service history, recurring schedules — 
     clean and ready to import in 48 hours.
   </p>
   <div class="hero-cta">
@@ -579,7 +624,7 @@
     </div>
     <div class="quote-card">
       <p class="quote-text">"We've been trying for a year to switch software. FieldRoutes made it impossible. I had to forfeit the rest of my subscription."</p>
-      <p class="quote-source">— SoftwareAdvice review, Lawn &amp; Pest</p>
+      <p class="quote-source">— SoftwareAdvice review, Lawn & Pest</p>
     </div>
     <div class="quote-card">
       <p class="quote-text">"No support when needed. Not two or three days later. No one ever answers the phone."</p>
@@ -597,7 +642,7 @@
       <div class="step-item">
         <div class="step-num">01</div>
         <div class="step-content">
-          <h3>Pay &amp; fill out the intake form</h3>
+          <h3>Pay & fill out the intake form</h3>
           <p>$199 via Stripe. Then answer 5 quick questions about your current setup, your destination platform, and what data matters most.</p>
         </div>
       </div>
@@ -706,7 +751,8 @@
           <li>Migration validation report</li>
           <li>48-hour turnaround guaranteed</li>
         </ul>
-        <a href="https://buy.stripe.com/test_cNicN63ee9TjeZn5n9eAg00" class="btn-plan btn-plan-primary">
+        <!-- REPLACE WITH YOUR STRIPE PAYMENT LINK -->
+        <a href="https://buy.stripe.com/REPLACE_WITH_STANDARD_LINK" class="btn-plan btn-plan-primary">
           Get started — $199 →
         </a>
       </div>
@@ -719,13 +765,14 @@
           <li>Everything in Standard</li>
           <li>API-direct data pull (we handle extraction)</li>
           <li>Chemical log PDF archive (state compliance)</li>
-          <li>Technician &amp; route mapping</li>
+          <li>Technician & route mapping</li>
           <li>30-min onboarding call post-delivery</li>
           <li>We answer any import questions for 7 days</li>
           <li>Priority 24-hour turnaround</li>
           <li>PestPac also supported</li>
         </ul>
-        <a href="https://buy.stripe.com/test_8x2dRadSSaXncRf7vheAg01" class="btn-plan btn-plan-secondary">
+        <!-- REPLACE WITH YOUR STRIPE PAYMENT LINK -->
+        <a href="https://buy.stripe.com/REPLACE_WITH_CONCIERGE_LINK" class="btn-plan btn-plan-secondary">
           Get Concierge — $349 →
         </a>
       </div>
@@ -780,12 +827,471 @@
 <!-- FOOTER -->
 <footer>
   <p>
-    ExitRoutes by <a href="https://t12n.ai">t12n.ai</a> &nbsp;·&nbsp;
-    <a href="mailto:steven@exitroutes.app">steven@exitroutes.app</a> &nbsp;·&nbsp;
-    Questions? <a href="mailto:steven@exitroutes.app">Email us before purchasing</a>
-    &nbsp;·&nbsp; <a href="/admin/login.html" class="admin-lock">🔒</a>
+    SwitchKit by <a href="https://t12n.ai">t12n.ai</a> &nbsp;·&nbsp;
+    <a href="mailto:steven@t12n.ai">steven@t12n.ai</a> &nbsp;·&nbsp;
+    Questions? <a href="mailto:steven@t12n.ai">Email us before purchasing</a>
   </p>
 </footer>
 
 </body>
 </html>
+```
+
+---
+
+## 3. STRIPE SETUP INSTRUCTIONS
+
+### Step 1: Create two Payment Links in your Stripe dashboard
+
+**Product 1: SwitchKit Standard**
+- Name: `SwitchKit Standard Migration`
+- Price: `$199.00 USD`
+- Payment type: One-time
+- Success URL: `https://switchkit.io/thank-you?plan=standard`
+- After-purchase: Redirect to Typeform intake form (see Section 4)
+
+**Product 2: SwitchKit Concierge**
+- Name: `SwitchKit Concierge Migration`
+- Price: `$349.00 USD`
+- Payment type: One-time
+- Success URL: `https://switchkit.io/thank-you?plan=concierge`
+- After-purchase: Redirect to Typeform intake form
+
+### Step 2: Replace placeholder links in the HTML
+
+Find these lines in index.html and replace with your actual Stripe URLs:
+```
+https://buy.stripe.com/REPLACE_WITH_STANDARD_LINK
+https://buy.stripe.com/REPLACE_WITH_CONCIERGE_LINK
+```
+
+### Step 3: Set up Stripe webhook (optional for MVP)
+
+For MVP, just check Stripe dashboard manually.
+When ready to automate: webhook event `checkout.session.completed`
+→ sends confirmation email with Typeform link.
+
+### Step 4: Confirmation email text (send manually for first 10 customers)
+
+Subject: Your SwitchKit order — next steps
+
+---
+Hi [Name],
+
+Payment received — you're in.
+
+Here's what happens next:
+
+1. Fill out this short intake form so we know exactly what you need:
+   [TYPEFORM LINK]
+
+2. We'll reply within 2 hours with a secure upload link for your FieldRoutes export files,
+   plus instructions for pulling everything you need.
+
+3. Within 48 hours of receiving your files, you'll have your complete migration package.
+
+Any questions, just reply to this email.
+
+— Steven
+steven@t12n.ai | SwitchKit
+---
+
+---
+
+## 4. TYPEFORM INTAKE FORM SPEC
+
+### Form title: SwitchKit — Migration Intake
+
+Create at: typeform.com (free plan supports this)
+Set to auto-send to: steven@t12n.ai on every submission
+
+### Questions (in order):
+
+**Q1 — Welcome screen**
+Headline: "Let's get your data back."
+Description: "5 quick questions — takes about 3 minutes. We'll be in touch within 2 hours."
+
+**Q2 — Short text**
+Question: "What's your company name?"
+Required: Yes
+
+**Q3 — Short text**
+Question: "What's the best email to reach you?"
+Format: Email
+Required: Yes
+
+**Q4 — Short text**
+Question: "What's a good phone number? (Optional — for the Concierge plan call)"
+Required: No
+
+**Q5 — Multiple choice**
+Question: "Which software are you migrating FROM?"
+Options:
+- FieldRoutes (formerly PestRoutes)
+- PestPac (WorkWave)
+- ServiceTitan
+- Other
+
+**Q6 — Multiple choice**
+Question: "Which software are you migrating TO?"
+Options:
+- GorillaDesk
+- Jobber
+- Housecall Pro
+- Other (I'll tell you in the notes)
+
+**Q7 — Multiple choice (allow multiple)**
+Question: "Which data is most important to you? (Select all that apply)"
+Options:
+- Customer list (names, addresses, contacts)
+- Active service subscriptions / recurring plans
+- Service history (past jobs, chemicals used)
+- Open invoices and outstanding balances
+- Technician assignments and routes
+- Chemical logs (EPA/state compliance records)
+- Customer notes and access instructions
+
+**Q8 — Long text**
+Question: "Anything else we should know? Any unusual data situations, multi-location setups, or things that have already gone wrong with the export?"
+Required: No
+Placeholder: "e.g. We have 3 service locations. FieldRoutes already told us our backup is incomplete. We have lawn care and pest control services on the same accounts."
+
+**Q9 — Thank you screen**
+Headline: "Got it. We'll be in touch within 2 hours."
+Description: "Check your email for your secure file upload link and export instructions. If you don't see it, check spam or email steven@t12n.ai directly."
+
+---
+
+## 5. CLAUDE CODE BUILD PROMPT
+
+Copy and paste this prompt to start a new Claude Code session in your repo.
+The session should begin with the repo already initialized (git init, README.md present).
+
+---
+
+```
+You are helping me build SwitchKit — a $199 data migration tool for pest control operators 
+leaving FieldRoutes/PestRoutes. The business context is in the handoff doc (see below).
+
+The repo should be structured as follows:
+
+switchkit/
+├── index.html              # Landing page (already written — see handoff doc)
+├── app/
+│   ├── main.py             # Streamlit UI for the migration tool
+│   ├── parser.py           # FieldRoutes CSV parsing logic
+│   ├── mapper.py           # Field mapping engine (FR → GorillaDesk/Jobber/HCP)
+│   ├── cleaner.py          # Data cleaning and validation
+│   ├── packager.py         # Output ZIP generation
+│   └── config/
+│       ├── gorilladesk.json    # Field mapping: FR → GorillaDesk
+│       ├── jobber.json         # Field mapping: FR → Jobber
+│       └── housecallpro.json   # Field mapping: FR → Housecall Pro
+├── sample_data/
+│   ├── fr_customers_sample.csv        # Sample FieldRoutes customer export
+│   ├── fr_subscriptions_sample.csv    # Sample subscriptions export
+│   └── fr_service_history_sample.csv  # Sample service history
+├── requirements.txt
+└── README.md
+
+---
+
+## What to build first (in order):
+
+### 1. Sample data files (start here)
+
+Create realistic sample CSV files that mimic what FieldRoutes actually exports.
+Base them on these known FieldRoutes export fields:
+
+customers export fields:
+CustomerID, FirstName, LastName, CompanyName, BillingAddress1, BillingAddress2, 
+BillingCity, BillingState, BillingZip, ServiceAddress1, ServiceAddress2, ServiceCity, 
+ServiceState, ServiceZip, Phone1, Phone2, Email, Balance, Notes, IsActive, CreatedDate
+
+subscriptions export fields:
+SubscriptionID, CustomerID, ServiceType, Frequency, Price, NextServiceDate, 
+TechnicianID, Status, AutoPay, ContractStartDate, ContractEndDate
+
+service_history export fields:
+AppointmentID, CustomerID, SubscriptionID, ServiceDate, TechnicianID, Status, 
+ChemicalsUsed, AmountApplied, Notes, InvoiceAmount, AmountPaid
+
+Create 25 realistic sample customers with messy data: 
+- Some missing emails
+- Phone numbers in various formats (555-1234, (555) 123-4567, 5551234567)
+- Some customers with service address = billing address, some different
+- A few duplicate records
+- Mix of active and inactive subscriptions
+- Service history going back 24 months
+
+---
+
+### 2. parser.py
+
+A Python class `FieldRoutesParser` that:
+- Accepts a dict of {filename: file_path} for the uploaded CSVs
+- Detects which export type each file is (customers / subscriptions / service_history)
+  based on column headers
+- Reads each file with pandas, handling:
+  - BOM characters (some FR exports have UTF-8-BOM)
+  - Mixed encodings (try UTF-8, fall back to latin-1)
+  - Extra whitespace in headers and values
+  - Empty rows
+- Returns a dict of {table_name: DataFrame}
+- Logs a warning for any unexpected columns or missing required columns
+
+---
+
+### 3. cleaner.py
+
+A class `DataCleaner` that takes the parsed DataFrames and:
+
+**Phone normalization:**
+- Accept any common US format
+- Output: (555) 555-5555 standard format
+- Flag invalid/missing phone numbers
+
+**Address standardization:**
+- Strip extra whitespace
+- Title-case street names
+- Validate that city/state/zip are all present; flag if not
+
+**Email validation:**
+- Basic regex check
+- Flag missing emails (critical — many platforms need email for import)
+
+**Deduplication:**
+- Identify duplicate CustomerIDs
+- Identify potential duplicates by (FirstName + LastName + ServiceAddress) or (Email)
+- Flag but don't auto-delete — report them for human review
+
+**Service address vs billing address:**
+- If ServiceAddress fields are empty, copy from BillingAddress fields
+- Add a flag column: `address_is_same` (True/False)
+
+**Active filtering:**
+- Separate active vs inactive customers
+- Include both in output but label clearly
+
+Returns cleaned DataFrames + a validation report dict:
+{
+  "total_customers": int,
+  "active_customers": int,
+  "missing_email": [list of CustomerIDs],
+  "invalid_phone": [list of CustomerIDs],
+  "duplicate_flags": [list of CustomerID pairs],
+  "missing_address_fields": [list of CustomerIDs]
+}
+
+---
+
+### 4. config/gorilladesk.json
+
+A field mapping configuration for the GorillaDesk import format.
+GorillaDesk customer import expects these columns:
+first_name, last_name, company, email, phone, mobile, 
+billing_address, billing_city, billing_state, billing_zip,
+service_address, service_city, service_state, service_zip,
+notes, balance
+
+Map from FieldRoutes customer fields to GorillaDesk fields.
+Fields that don't map directly should have a "transform" key 
+explaining what processing is needed.
+
+Also create gorilladesk subscription mapping for their recurring service import format.
+
+---
+
+### 5. mapper.py
+
+A class `FieldMapper` that:
+- Loads a mapping config JSON for the selected destination
+- Applies column renaming from FR field names → destination field names
+- Applies any transform rules defined in the config
+- Returns DataFrames ready for export with destination-native column names
+- Drops any columns that have no mapping (log them as "unmapped")
+
+---
+
+### 6. packager.py
+
+A class `MigrationPackager` that:
+- Takes the mapped DataFrames + validation report
+- Generates a ZIP file containing:
+  - customers.csv (destination-formatted)
+  - subscriptions.csv (destination-formatted)
+  - service_history.csv (destination-formatted)
+  - open_invoices.csv (balance > 0 subset of customers)
+  - migration_report.txt (human-readable summary of what was migrated 
+    and what was flagged)
+  - README.txt (import instructions for the destination platform, 
+    one section per file)
+- Returns the path to the ZIP file
+
+The migration_report.txt should look like:
+
+```
+SWITCHKIT MIGRATION REPORT
+Generated: [datetime]
+Destination: GorillaDesk
+
+SUMMARY
+-------
+Total customers processed: 247
+Active customers: 231
+Inactive customers: 16
+Subscriptions migrated: 189
+Service records migrated: 1,843
+Open invoices: 23 (total balance: $4,210.00)
+
+WARNINGS (review before importing)
+-----------------------------------
+Missing email address (12 customers):
+  - #1042 Johnson Exterminators — no email on file
+  - #1187 Garcia Residence — no email on file
+  [...]
+
+Potential duplicates flagged (2 pairs):
+  - #1023 and #1089 may be the same customer (same address, different name spellings)
+  - #0445 and #1332 may be the same customer (same email address)
+
+Invalid phone numbers (3 customers):
+  - #0221 Smith Property Mgmt — phone "555-PEST" could not be formatted
+  [...]
+
+UNMAPPED FIELDS (not included in output)
+-----------------------------------------
+FieldRoutes field "CustomField1" has no GorillaDesk equivalent
+FieldRoutes field "SalesRepID" has no GorillaDesk equivalent
+
+NEXT STEPS
+----------
+1. Import customers.csv first using GorillaDesk Settings → Import → Customers
+2. Then import subscriptions.csv
+3. Then service_history.csv
+4. Review the 12 customers with missing emails and add manually
+5. Review the 2 potential duplicate pairs and merge if needed
+```
+
+---
+
+### 7. app/main.py — Streamlit UI
+
+A clean, functional Streamlit app with:
+
+**Page 1: Upload**
+- Title: "SwitchKit — FieldRoutes Migration"
+- Subtitle: "Upload your FieldRoutes export files to get started"
+- File uploader (accepts multiple CSVs): "Upload your FieldRoutes export files"
+- Dropdown: "I'm migrating to:" [GorillaDesk, Jobber, Housecall Pro]
+- Button: "Process migration"
+
+**Page 2: Processing**
+- Progress bar showing steps:
+  1. Parsing files...
+  2. Cleaning data...
+  3. Validating records...
+  4. Generating output...
+- Show completion checkmarks as each step finishes
+
+**Page 3: Results**
+- Summary metrics in cards:
+  - Customers migrated
+  - Subscriptions
+  - Service records
+  - Warnings found
+- Expandable "Warnings" section showing the validation issues
+- Large button: "Download migration package (.zip)"
+- Small text: "Questions? Email steven@t12n.ai"
+
+**Styling:**
+- Dark theme: st.set_page_config(layout="wide")
+- Use st.markdown with custom CSS to match the landing page feel:
+  - Dark background #0A0F1C
+  - Accent color #F5C842
+  - IBM Plex Mono for code/numbers
+- Keep it clean and functional — this is a tool, not a marketing page
+
+---
+
+### 8. requirements.txt
+
+pandas>=2.0
+streamlit>=1.30
+openpyxl>=3.1    # for Excel exports if needed
+python-dotenv>=1.0
+
+---
+
+### 9. README.md
+
+Write a complete developer README with:
+- Project overview (1 paragraph)
+- Local setup instructions
+- How to run locally: `streamlit run app/main.py`
+- How to deploy to Streamlit Cloud (free, takes 5 min)
+- File structure explanation
+- How to add a new destination platform (add a config JSON + register in mapper.py)
+- Known limitations of FieldRoutes exports
+- Environment variables needed (none for MVP, placeholder for future Stripe webhook)
+
+---
+
+## Priority order:
+1. sample_data/ files first — everything else tests against these
+2. parser.py + cleaner.py — core processing logic
+3. config/gorilladesk.json + mapper.py — first destination
+4. packager.py — output generation
+5. app/main.py — UI (can use sample data to build and test this)
+6. config/jobber.json + config/housecallpro.json — additional destinations
+7. README.md last
+
+## Testing approach:
+After each module, test with the sample data files.
+The final integration test: run the Streamlit app, upload all three sample CSVs,
+select GorillaDesk, process, download the ZIP, and verify the contents look correct.
+
+## What NOT to build in this session:
+- Authentication / user accounts
+- Stripe webhook integration
+- Email sending
+- Database / persistent storage
+- FieldRoutes API connector (Phase 3 — future session)
+
+Any questions about the business context or data structures, ask before coding.
+```
+
+---
+
+## 6. QUICK-START CHECKLIST
+
+Week 1 — before writing code:
+- [ ] Register switchkit.io (or .co)
+- [ ] Deploy index.html to Vercel (drag-and-drop, free)
+- [ ] Create Stripe account + two Payment Links
+- [ ] Create Typeform intake form
+- [ ] Update Stripe links in index.html and redeploy
+- [ ] Run Claude Code session with the prompt above
+- [ ] Send first 10 outreach emails using scripts from outreach guide
+
+Week 2 — after first paying customers:
+- [ ] Deploy Streamlit app to Streamlit Cloud
+- [ ] Do first migrations manually using sample data as a template
+- [ ] Use real customer data to test and fix the parser
+- [ ] Add GorillaDesk field mapping based on what you learn from real data
+
+---
+
+## 7. DOMAIN + HOSTING
+
+**Domain:** switchkit.io (~$12/yr on Namecheap or Google Domains)
+**Landing page:** Vercel (free, deploy by dropping index.html into a repo)
+**Streamlit app:** Streamlit Cloud (free for one public app)
+**File uploads:** WeTransfer or Filestack free tier for MVP (operator emails files)
+**Email:** Use your existing steven@t12n.ai
+
+Total monthly cost at MVP stage: $0 (domain is annual)
+
+---
+
+END OF HANDOFF DOCUMENT

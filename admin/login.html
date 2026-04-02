@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — ExitRoutes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0A0F1C;
+      --surface: #111827;
+      --surface2: #162030;
+      --accent: #F5C842;
+      --accent-dim: rgba(245,200,66,0.12);
+      --text: #F0EDE4;
+      --muted: #8899AA;
+      --border: #1E2D40;
+      --success: #2ECC71;
+      --danger: #E74C3C;
+      --font-head: 'Syne', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --font-body: 'Source Serif 4', serif;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-wrap {
+      width: 100%;
+      max-width: 420px;
+      padding: 1.5rem;
+    }
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2.5rem;
+    }
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+      margin-bottom: 0.4rem;
+    }
+    .logo span { color: var(--muted); }
+    .admin-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 2px 6px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .hint {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-family: var(--font-body);
+      margin: 1.5rem 0 1.25rem;
+      line-height: 1.5;
+    }
+    .error-banner {
+      background: rgba(231,76,60,0.1);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+    form { display: flex; flex-direction: column; gap: 0.75rem; }
+    input[type="email"] {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      padding: 0.75rem 1rem;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input[type="email"]:focus { border-color: var(--accent); }
+    input[type="email"]::placeholder { color: var(--muted); }
+    button[type="submit"] {
+      background: var(--accent);
+      color: #0A0F1C;
+      border: none;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 0.85rem;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      width: 100%;
+    }
+    button[type="submit"]:hover:not(:disabled) { opacity: 0.9; }
+    button[type="submit"]:disabled { opacity: 0.5; cursor: default; }
+    .sent-msg {
+      font-size: 0.92rem;
+      color: var(--success);
+      font-family: var(--font-body);
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: rgba(46,204,113,0.08);
+      border: 1px solid rgba(46,204,113,0.2);
+      border-radius: 4px;
+      line-height: 1.5;
+    }
+    .back-link {
+      display: block;
+      margin-top: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      text-align: center;
+      letter-spacing: 0.04em;
+    }
+    .back-link:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="logo">exit<span>routes</span><span class="admin-tag">admin</span></div>
+
+    <div class="error-banner" id="errorBanner" hidden></div>
+
+    <div id="formState">
+      <p class="hint">Enter your admin email to receive a one-time login link.</p>
+      <form id="loginForm">
+        <input type="email" id="emailInput" placeholder="you@exitroutes.app" autocomplete="email" required />
+        <button type="submit" id="submitBtn">Send login link</button>
+      </form>
+    </div>
+
+    <div id="sentState" hidden>
+      <p class="sent-msg">Check your inbox — a login link is on its way. The link expires in 15 minutes.</p>
+    </div>
+
+    <a href="/" class="back-link">← exitroutes.app</a>
+  </div>
+</div>
+
+<script>
+  const API = 'https://api.exitroutes.app';
+
+  // Show error banner if redirected back from a failed verify
+  const params = new URLSearchParams(location.search);
+  const err = params.get('error');
+  if (err) {
+    const banner = document.getElementById('errorBanner');
+    banner.textContent = err === 'expired'
+      ? 'That login link has expired or was already used. Request a new one.'
+      : 'Invalid login link. Please request a new one.';
+    banner.hidden = false;
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn   = document.getElementById('submitBtn');
+    const email = document.getElementById('emailInput').value.trim();
+
+    btn.disabled    = true;
+    btn.textContent = 'Sending…';
+
+    try {
+      await fetch(`${API}/auth/magic-link`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email }),
+      });
+    } catch (_) { /* network error — still show sent state, API always 200 */ }
+
+    document.getElementById('formState').hidden = true;
+    document.getElementById('sentState').hidden  = false;
+  });
+</script>
+
+</body>
+</html>
