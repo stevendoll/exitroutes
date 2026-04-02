@@ -90,9 +90,9 @@ fi
 # ── Package Lambda ────────────────────────────────────────────────────
 echo "==> Packaging Lambda"
 PACKAGE_DIR=$(mktemp -d /tmp/lambda-pkg-XXXXX)
-pip install -r "$ROOT/api/requirements.txt" -t "$PACKAGE_DIR" -q
+pip3 install -r "$ROOT/api/requirements.txt" -t "$PACKAGE_DIR" -q
 cp "$ROOT/api/webhook.py" "$PACKAGE_DIR/"
-ZIP_FILE=$(mktemp /tmp/lambda-XXXXX.zip)
+ZIP_FILE="/tmp/lambda-$$.zip"
 (cd "$PACKAGE_DIR" && zip -r "$ZIP_FILE" . -q)
 rm -rf "$PACKAGE_DIR"
 echo "    ✓ $(du -sh "$ZIP_FILE" | cut -f1) zip"
