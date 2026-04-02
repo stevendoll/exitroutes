@@ -68,7 +68,7 @@ class TestMagicLink:
 
 
 class TestVerify:
-    def test_valid_token_returns_200_and_cookie(self, db):
+    def test_valid_token_redirects_to_dashboard_with_cookie(self, db):
         cid   = db.put_contact(_admin_contact_data())
         token = db.create_magic_link_token(cid, ttl_minutes=15)
         from api.auth import handle_verify
@@ -76,8 +76,8 @@ class TestVerify:
             event         = _make_event("GET", "/auth/verify")
             event["queryStringParameters"] = {"token": token, "cid": cid}
             resp          = handle_verify(event)
-        assert resp["statusCode"] == 200
-        # Session cookies should be set
+        assert resp["statusCode"] == 302
+        assert "/admin/index.html" in resp["headers"]["Location"]
         cookies = resp.get("cookies", [])
         assert any("er_session=" in c for c in cookies)
 
@@ -92,22 +92,24 @@ class TestVerify:
         # Token should be gone
         assert db.get_token(cid, token) is None
 
-    def test_invalid_token_returns_401(self, db):
+    def test_invalid_token_redirects_to_login_with_error(self, db):
         cid = db.put_contact(_admin_contact_data())
         from api.auth import handle_verify
         with patch("api.auth.DynamoClient", return_value=db):
             event = _make_event("GET", "/auth/verify")
             event["queryStringParameters"] = {"token": "bad-token", "cid": cid}
             resp  = handle_verify(event)
-        assert resp["statusCode"] == 401
+        assert resp["statusCode"] == 302
+        assert "error=expired" in resp["headers"]["Location"]
 
-    def test_missing_params_returns_400(self, db):
+    def test_missing_params_redirects_to_login_with_error(self, db):
         from api.auth import handle_verify
         with patch("api.auth.DynamoClient", return_value=db):
             event = _make_event("GET", "/auth/verify")
             event["queryStringParameters"] = {}
             resp  = handle_verify(event)
-        assert resp["statusCode"] == 400
+        assert resp["statusCode"] == 302
+        assert "error=invalid" in resp["headers"]["Location"]
 
 
 class TestLogout:
