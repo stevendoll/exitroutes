@@ -1,0 +1,50 @@
+{
+  "destination": "GorillaDesk",
+  "customers": {
+    "column_map": {
+      "FirstName":        "first_name",
+      "LastName":         "last_name",
+      "CompanyName":      "company",
+      "Email":            "email",
+      "Phone1":           "phone",
+      "Phone2":           "mobile",
+      "BillingAddress1":  "billing_address",
+      "BillingCity":      "billing_city",
+      "BillingState":     "billing_state",
+      "BillingZip":       "billing_zip",
+      "ServiceAddress1":  "service_address",
+      "ServiceCity":      "service_city",
+      "ServiceState":     "service_state",
+      "ServiceZip":       "service_zip",
+      "Notes":            "notes",
+      "Balance":          "balance"
+    },
+    "drop": ["CustomerID", "BillingAddress2", "ServiceAddress2", "IsActive", "CreatedDate", "address_is_same"]
+  },
+  "subscriptions": {
+    "column_map": {
+      "CustomerID":       "customer_id",
+      "ServiceType":      "service_type",
+      "Frequency":        "frequency",
+      "Price":            "price",
+      "NextServiceDate":  "next_service_date",
+      "Status":           "status",
+      "AutoPay":          "autopay"
+    },
+    "drop": ["SubscriptionID", "TechnicianID", "ContractStartDate", "ContractEndDate"]
+  },
+  "service_history": {
+    "column_map": {
+      "CustomerID":       "customer_id",
+      "ServiceDate":      "service_date",
+      "TechnicianID":     "technician_id",
+      "Status":           "status",
+      "ChemicalsUsed":    "chemicals_used",
+      "AmountApplied":    "amount_applied",
+      "Notes":            "notes",
+      "InvoiceAmount":    "invoice_amount",
+      "AmountPaid":       "amount_paid"
+    },
+    "drop": ["AppointmentID", "SubscriptionID"]
+  }
+}

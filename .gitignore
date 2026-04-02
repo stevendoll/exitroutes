@@ -3,5 +3,5 @@ __pycache__/
 *.pyc
 .DS_Store
 node_modules/
-dist/
-.streamlit/secrets.toml
+ui/dist/
+ui/node_modules/
