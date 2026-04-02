@@ -94,7 +94,7 @@ export default function Migrate() {
   return (
     <div className="migrate-page">
       <nav>
-        <a href="/" className="logo">exit<span>routes</span></a>
+        <a href="/" className="logo">Exit<span>Routes</span></a>
       </nav>
 
       <main className="migrate-main">
@@ -214,7 +214,7 @@ export default function Migrate() {
 
       <footer>
         <p>
-          exitroutes by <a href="https://t12n.ai">t12n.ai</a> &nbsp;·&nbsp;
+          ExitRoutes by <a href="https://t12n.ai">t12n.ai</a> &nbsp;·&nbsp;
           Questions? <a href="mailto:steven@t12n.ai">steven@t12n.ai</a>
         </p>
       </footer>

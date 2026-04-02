@@ -2,7 +2,7 @@ export default function Landing() {
   return (
     <>
       <nav>
-        <a href="/" className="logo">exit<span>routes</span></a>
+        <a href="/" className="logo">Exit<span>Routes</span></a>
         <a href="#pricing">Get started →</a>
       </nav>
 
@@ -11,7 +11,7 @@ export default function Landing() {
         <h1>Your data is yours.<br />Take it <em>back.</em></h1>
         <p className="hero-sub">
           FieldRoutes is charging $500 for an incomplete export and making it nearly impossible to leave.
-          exitroutes gets you out — customer list, service history, recurring schedules —
+          ExitRoutes gets you out — customer list, service history, recurring schedules —
           clean and ready to import in 48 hours.
         </p>
         <div className="hero-cta">
@@ -226,7 +226,7 @@ export default function Landing() {
 
       <footer>
         <p>
-          exitroutes by <a href="https://t12n.ai">t12n.ai</a> &nbsp;·&nbsp;
+          ExitRoutes by <a href="https://t12n.ai">t12n.ai</a> &nbsp;·&nbsp;
           <a href="mailto:steven@t12n.ai">steven@t12n.ai</a> &nbsp;·&nbsp;
           Questions? <a href="mailto:steven@t12n.ai">Email us before purchasing</a>
         </p>

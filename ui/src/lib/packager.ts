@@ -35,7 +35,7 @@ export async function packageMigration(
     warnings.push(`Potential duplicates (${report.duplicate_flags.length} pairs): ${report.duplicate_flags.map(p => p.join(' + ')).join('; ')}`)
 
   const reportText = [
-    `exitroutes Migration Report`,
+    `ExitRoutes Migration Report`,
     `Destination: ${destination}`,
     `Generated: ${new Date().toISOString()}`,
     '',

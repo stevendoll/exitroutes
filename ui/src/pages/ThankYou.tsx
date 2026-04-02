@@ -35,7 +35,7 @@ export default function ThankYou() {
       const body = encodeURIComponent(
         `Name: ${form.name}\nEmail: ${form.email}\nFrom: ${form.from_platform}\nTo: ${form.to_platform}\nNotes: ${form.notes}`
       )
-      window.open(`mailto:steven@t12n.ai?subject=exitroutes+intake&body=${body}`)
+      window.open(`mailto:steven@t12n.ai?subject=ExitRoutes+intake&body=${body}`)
       setSubmitted(true)
       setSubmitting(false)
       return
@@ -59,7 +59,7 @@ export default function ThankYou() {
   return (
     <div className="thankyou-body">
       <nav>
-        <a href="/" className="logo">exit<span>routes</span></a>
+        <a href="/" className="logo">Exit<span>Routes</span></a>
       </nav>
 
       <main className="thankyou-main">
@@ -141,7 +141,7 @@ export default function ThankYou() {
       </main>
 
       <footer>
-        <p>exitroutes by <a href="https://t12n.ai">t12n.ai</a></p>
+        <p>ExitRoutes by <a href="https://t12n.ai">t12n.ai</a></p>
       </footer>
     </div>
   )
