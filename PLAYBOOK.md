@@ -1,6 +1,6 @@
 # exitroutes.app — Development Playbook
 
-Practices and conventions adapted from [t12n](https://github.com/stevendoll/t12n).
+Practices and conventions adapted from [t12n](https://github.com/stevendoll/t12n) and [probate-scraper](https://github.com/stevendoll/probate-scraper).
 
 ---
 
@@ -168,6 +168,92 @@ Future: Stripe webhook `checkout.session.completed` → Lambda → SES confirmat
 MVP: [Streamlit Cloud](https://streamlit.io/cloud) — connect GitHub repo, point to `app/main.py`, free for one public app.
 
 Future: containerize and run on AWS Lambda or ECS.
+
+---
+
+## Git workflow
+
+### Branches
+
+- `main` — protected; never commit directly
+- `feature/<slug>` — all work happens here; open a PR to merge
+- Linear history preferred (rebase before merge)
+
+### Commit messages
+
+Follow conventional commits with a required `Prompted-by:` trailer:
+
+```
+feat: add Stripe webhook handler
+
+Sends SES confirmation and Slack #money notification on purchase.
+
+Prompted-by: claude-sonnet-4-6
+Prompt-summary: build the stripe integration for me
+```
+
+Types: `feat` | `fix` | `test` | `docs` | `refactor` | `chore`
+
+A commit template is configured in `.gitmessage` — it loads automatically when you run `git commit`.
+
+### PRs
+
+Use the PR template at `.github/pull_request_template.md`. Always paste the prompt that generated the work. This enables prompt → code quality analysis over time.
+
+Session notes go in `docs/sessions/YYYY-MM-DD-slug.md`.
+
+---
+
+## Testing
+
+Framework: **pytest**. Tests live in `tests/`, source in `app/` and `api/`.
+
+```bash
+# Install dev deps
+pip install pytest pytest-cov pandas stripe boto3
+
+# Run all tests
+pytest tests/ -v
+
+# With coverage
+pytest tests/ --cov=app --cov=api --cov-report=term-missing
+```
+
+### Test files
+
+| File | What it covers |
+|------|---------------|
+| `tests/test_parser.py` | CSV detection, encoding, BOM handling |
+| `tests/test_cleaner.py` | Phone normalization, email validation, deduplication, address fallback |
+| `tests/test_mapper.py` | Column mapping for all three destinations |
+| `tests/test_packager.py` | ZIP output, report text, open invoices extraction |
+| `tests/test_webhook.py` | Signature verification, plan detection, SES, Slack |
+
+CI runs `pytest tests/ -v` on every PR. `main` is blocked until tests pass.
+
+---
+
+## CI / Branch protection
+
+`ci.yml` triggers on PRs to `main`. Required status check: **`tests`**.
+
+Branch protection rules on `main`:
+- Required status checks: `tests` (strict — branch must be up to date)
+- No force pushes
+- No deletions
+
+To add or update branch protection:
+```bash
+gh api --method PUT repos/stevendoll/exitroutes/branches/main/protection \
+  --input - <<JSON
+{
+  "required_status_checks": {"strict": true, "contexts": ["tests"]},
+  "enforce_admins": false,
+  "required_pull_request_reviews": null,
+  "restrictions": null
+}
+JSON
+```
 
 ---
 
