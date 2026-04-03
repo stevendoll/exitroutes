@@ -46,18 +46,28 @@ def _cookie(name: str, value: str, max_age: int) -> str:
 def _send_magic_link(email: str, token: str, contact_id: str):
     ses  = boto3.client("ses", region_name=os.environ.get("AWS_REGION", "us-east-1"))
     link = f"{MAGIC_LINK_BASE_URL}/auth/verify?token={token}&cid={contact_id}"
-    body = (
+    text = (
         f"Click the link below to log in to ExitRoutes admin.\n\n"
         f"{link}\n\n"
         f"This link expires in {MAGIC_LINK_TTL_MINUTES} minutes.\n\n"
         "If you didn't request this, ignore this email."
     )
+    html = f"""<html><body style="font-family:sans-serif;color:#111;max-width:480px;margin:40px auto;padding:0 16px">
+<p>Click the button below to log in to ExitRoutes admin.</p>
+<p style="margin:32px 0">
+  <a href="{link}" style="background:#F5C842;color:#0A0F1C;text-decoration:none;padding:12px 24px;border-radius:4px;font-weight:600;font-size:15px">Log in to ExitRoutes</a>
+</p>
+<p style="font-size:13px;color:#666">Link expires in {MAGIC_LINK_TTL_MINUTES} minutes. If you didn't request this, ignore this email.</p>
+</body></html>"""
     ses.send_email(
         Source=FROM_EMAIL,
         Destination={"ToAddresses": [email]},
         Message={
             "Subject": {"Data": "ExitRoutes — your login link"},
-            "Body":    {"Text": {"Data": body}},
+            "Body": {
+                "Text": {"Data": text},
+                "Html":  {"Data": html},
+            },
         },
     )
 
