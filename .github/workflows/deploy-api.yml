@@ -43,6 +43,9 @@ jobs:
             --function-name exitroutes-webhook \
             --zip-file fileb://lambda.zip \
             --region us-east-1
+          aws lambda wait function-updated \
+            --function-name exitroutes-webhook \
+            --region us-east-1
 
       - name: Update exitroutes-webhook env vars
         run: |
@@ -56,12 +59,18 @@ jobs:
               SLACKMAIL_API_KEY=${{ secrets.SLACKMAIL_API_KEY }}\
             }" \
             --region us-east-1
+          aws lambda wait function-updated \
+            --function-name exitroutes-webhook \
+            --region us-east-1
 
       - name: Deploy exitroutes-api
         run: |
           aws lambda update-function-code \
             --function-name exitroutes-api \
             --zip-file fileb://lambda.zip \
+            --region us-east-1
+          aws lambda wait function-updated \
+            --function-name exitroutes-api \
             --region us-east-1
 
       - name: Update exitroutes-api env vars
@@ -78,4 +87,7 @@ jobs:
               SLACKMAIL_URL=${{ secrets.SLACKMAIL_URL }},\
               SLACKMAIL_API_KEY=${{ secrets.SLACKMAIL_API_KEY }}\
             }" \
+            --region us-east-1
+          aws lambda wait function-updated \
+            --function-name exitroutes-api \
             --region us-east-1
