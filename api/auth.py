@@ -105,6 +105,9 @@ def handle_magic_link(event: dict) -> dict:
 
 def handle_verify(event: dict) -> dict:
     """GET /auth/verify?token=xxx&cid=yyy — validate magic link, issue session cookie."""
+    logger.info("verify event keys: %s", list(event.keys()))
+    logger.info("verify rawQueryString: %s", event.get("rawQueryString", "<missing>"))
+    logger.info("verify queryStringParameters: %s", event.get("queryStringParameters"))
     params     = event.get("queryStringParameters") or {}
     token      = (params.get("token") or "").strip()
     contact_id = (params.get("cid") or "").strip()
@@ -178,19 +181,29 @@ def get_authenticated_contact(event: dict) -> dict | None:
 
 
 def _get_session(event: dict) -> tuple[str | None, str | None]:
-    """Parse er_session and er_contact from Cookie header."""
-    cookie_header = (event.get("headers") or {}).get("cookie", "")
-    cookies       = {}
-    for part in cookie_header.split(";"):
-        part = part.strip()
+    """Parse er_session and er_contact from cookies.
+
+    API Gateway HTTP API v2 moves cookies out of headers['cookie'] and into
+    event['cookies'] (an array of 'name=value' strings). Fall back to the
+    raw Cookie header for local testing / v1 format.
+    """
+    cookies: dict[str, str] = {}
+
+    # API Gateway v2: cookies are in event["cookies"] array
+    for part in (event.get("cookies") or []):
         if "=" in part:
             k, _, v = part.partition("=")
             cookies[k.strip()] = v.strip()
 
-    # Session token encodes contact_id via query-string at verify time;
-    # we store contact_id in a separate readable (non-HttpOnly) cookie.
-    # Here we derive it from the token item itself by scanning — but that
-    # requires a DB call. Instead, include contact_id in a plain cookie.
+    # Fallback: raw Cookie header (local tests, v1 format)
+    if not cookies:
+        cookie_header = (event.get("headers") or {}).get("cookie", "")
+        for part in cookie_header.split(";"):
+            part = part.strip()
+            if "=" in part:
+                k, _, v = part.partition("=")
+                cookies[k.strip()] = v.strip()
+
     session_token = cookies.get(SESSION_COOKIE)
     contact_id    = cookies.get(CONTACT_COOKIE)
     return contact_id, session_token
